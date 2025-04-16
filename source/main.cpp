@@ -7,7 +7,9 @@
 
  //COMPILE g++ -Wall *.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
 #include <iostream>
-#include "../buttonClass/button.h"
+#include "../include/button.h"
+#include "../include/enemyclass.h"
+#include "../include/enemymovement.h"
 
 using std::cout;
 using std::endl;
