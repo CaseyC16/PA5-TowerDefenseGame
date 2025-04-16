@@ -4,6 +4,8 @@
  * @brief Balloon Tower Defense Game
  * @date 2025-04-09
  */
+
+ //COMPILE g++ -Wall *.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
 #include <iostream>
 #include "../buttonClass/button.h"
 
