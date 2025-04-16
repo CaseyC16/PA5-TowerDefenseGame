@@ -1,9 +1,9 @@
-#include "button.h"
+#include "../include/button.h"
 
 //Constructor that sets button label to s, button position to the position,  button size to size (given in pixels), and button color to color.
 Button::Button(std::string s, sf::Vector2f position, sf::Vector2f size, sf::Color color)
 {
-    if (!mTexture.loadFromFile("button.png"))
+    if (!mTexture.loadFromFile("resources/button.png"))
     {
         std::cout<<"Error opening file\n";
         exit(1);
@@ -24,7 +24,7 @@ Button::Button(std::string s, sf::Vector2f position, sf::Vector2f size, sf::Colo
     //set size as a ratio of original size
     mButton.setScale(size.x/imageSize.x, size.y/imageSize.y);
     //Make label
-    if (!mFont.loadFromFile("college.ttf"))
+    if (!mFont.loadFromFile("resources/college.ttf"))
     {
         std::cout<<"Error opening file\n";
         exit(2);
