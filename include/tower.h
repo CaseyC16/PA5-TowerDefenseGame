@@ -9,6 +9,7 @@ class Tower
 {
 public:
     void setPosition(sf::Vector2f position) {mPos = position;}
+    
     sf::Vector2f getPosition() const {return mPos;}
     virtual ~Tower() = default;
     //virtual void attack(Enemy &e) = 0;      //pure virtual function that accepts an Enemy object by reference
