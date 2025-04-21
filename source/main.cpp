@@ -6,6 +6,7 @@
  */
 
  //COMPILE g++ -Wall *.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
+ //On Mac: g++ -Wall -std=c++11 source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
 #include <iostream>
 #include "../include/button.h"
 #include "../include/enemyclass.h"
