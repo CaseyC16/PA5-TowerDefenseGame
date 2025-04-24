@@ -6,11 +6,13 @@
  */
 
  //COMPILE g++ -Wall *.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
- //On Mac: g++ -Wall -std=c++11 source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
+ //On Mac: g++ -Wall -std=c++11 -o sfml-app source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
 #include <iostream>
 #include "../include/button.h"
 #include "../include/enemyclass.h"
 #include "../include/enemymovement.h"
+#include "../include/testSprite.h"
+#include "../include/tower.h"
 
 using std::cout;
 using std::endl;
@@ -45,22 +47,29 @@ int main()
             While()
     */
     
-    sf::RenderWindow window(sf::VideoMode(1600, 1200), "Squirrels Tower Defense");
-    Button rules("Rules",sf::Vector2f(200.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color::Green);
+   sf::RenderWindow window(sf::VideoMode(1600, 1200), "Squirrels Tower Defense");
+   Button rules("Rules",sf::Vector2f(200.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color::Green);
    //changed color of first button
    rules.setColorTextHover(sf::Color::Green);
    rules.setColorTextNormal(sf::Color(95,25,10));
-   bool viewRules = 0;
+   //bool viewRules = 0;
    Button play("Play",sf::Vector2f(600.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color::Red);
    //Changed Color of Second Button
    play.setColorTextHover(sf::Color(95,25,10));
    play.setColorTextNormal(sf::Color::Green);
-   bool playGame = 0;
+   //bool playGame = 0;
    //extra button... Title????
    Button header("Squirrels Tower Defense", sf::Vector2f(400,50), sf::Vector2f(200,100), sf::Color::Black);
    header.setColorTextHover(sf::Color::Green);
 
-   while (window.isOpen())
+   //************************************** */
+   //Tower class testing
+   TestSprite Tree1;
+   TestSprite Tree2("resources/testTree.png", sf::Vector2f(1000.f,500.f), sf::Vector2f(100.f,100.f));
+   ConeThrower Tower1(sf::Vector2f(1100.f, 550.f));
+   //************************************** */
+
+   while(window.isOpen())
    {
        sf::Event event;
        while (window.pollEvent(event))
@@ -82,9 +91,20 @@ int main()
        window.draw(rules);
        window.draw(play);
        window.draw(header);
+       window.draw(Tree1);
+       window.draw(Tree2);
+       Tower1.drawTower(window);
        window.display();
    }
 
+   //************************************** */
+   //Tower class testing
+   window.clear();
+   window.draw(Tree1);
+   window.draw(Tree2);
+   window.display();
+
+   //************************************** */
 
     return 0;
 
