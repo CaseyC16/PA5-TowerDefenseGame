@@ -5,8 +5,13 @@
  * @date 2025-04-09
  */
 
+<<<<<<< HEAD
+ //COMPILE g++ -Wall *.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
+ //On Mac: g++ -Wall -std=c++11 -o sfml-app source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
+=======
  //COMPILE g++ -Wall source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
  //On Mac: g++ -Wall -std=c++11 source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
+>>>>>>> main
 #include <iostream>
 #include "../include/button.h"
 #include "../include/enemyclass.h"
@@ -47,8 +52,13 @@ int main()
             While()
     */
     
+<<<<<<< HEAD
+   sf::RenderWindow window(sf::VideoMode(1600, 1200), "Squirrels Tower Defense");
+   Button rules("Rules",sf::Vector2f(200.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color::Green);
+=======
     sf::RenderWindow window(sf::VideoMode(800, 400), "Squirrels Tower Defense");
     Button rules("Rules",sf::Vector2f(200.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color::Green);
+>>>>>>> main
    //changed color of first button
    rules.setColorTextHover(sf::Color::Green);
    rules.setColorTextNormal(sf::Color(95,25,10));
