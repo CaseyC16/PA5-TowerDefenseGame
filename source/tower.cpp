@@ -1,14 +1,20 @@
 #include "../include/tower.h"
 
-Tower::Tower() : mRadius(0), mPos(0.f,0.f), mFireRate(0), mDamage(0)
-{}
-
-ConeThrower::ConeThrower(sf::Vector2f position)
+void Tower::addTarget(Enemy e)
 {
-    mRadius = 50;
-    mPos = position;
-    mFireRate = 5;
-    mDamage = 1;
+    //have a piece of code in main that detects when an enemy enters the radius
+    mTargets.push(e);
+}
+
+void Tower::removeTarget(Enemy e)
+{
+    //have a piece of code in main that detects when an enemy leaves the radius
+    mTargets.pop();
+}
+
+void Tower::draw(sf::RenderWindow &window)
+{
+    window.draw(mSprite);
 }
 
 BranchSpike::BranchSpike(sf::Vector2f position)

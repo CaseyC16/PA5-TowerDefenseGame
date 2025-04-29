@@ -5,8 +5,8 @@
  * @date 2025-04-09
  */
 
- //COMPILE g++ -Wall source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
- //On Mac: g++ -Wall -std=c++11 source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
+ //COMPILE g++ -Wall main.cpp source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
+ //On Mac: g++ -Wall -std=c++11 main.cpp source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
 #include <iostream>
 #include "include/button.h"
 #include "include/enemyclass.h"
@@ -50,17 +50,26 @@ int main()
    //changed color of first button
    rules.setColorTextHover(sf::Color::Green);
    rules.setColorTextNormal(sf::Color(95,25,10));
-   bool viewRules = 0;
+   //bool viewRules = 0;
    Button play("Play",sf::Vector2f(600.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color::Red);
    //Changed Color of Second Button
    play.setColorTextHover(sf::Color(95,25,10));
    play.setColorTextNormal(sf::Color::Green);
-   bool playGame = 0;
+   //bool playGame = 0;
    //extra button... Title????
    Button header("Squirrels Tower Defense", sf::Vector2f(400,50), sf::Vector2f(200,100), sf::Color::Black);
    header.setColorTextHover(sf::Color::Green);
 
-   while (window.isOpen())
+   //************************************** */
+   //Tower class testing
+//    TestSprite Tree1;
+//    TestSprite Tree2("resources/testTree.png", sf::Vector2f(700.f,300.f), sf::Vector2f(100.f,100.f));
+//    TestSprite Tree3("resources/testTree.png", sf::Vector2f(300.f,200.f), sf::Vector2f(100.f,100.f));
+   ConeThrower Tower1(sf::Vector2f(500.f, 250.f));
+   //Tower1.setSprite("resources/testTree.png");
+   //************************************** */
+
+   while(window.isOpen())
    {
        sf::Event event;
        while (window.pollEvent(event))
@@ -82,9 +91,22 @@ int main()
        window.draw(rules);
        window.draw(play);
        window.draw(header);
+    //    window.draw(Tree1);
+    //    window.draw(Tree2);
+    //    window.draw(Tree3);
+       Tower1.draw(window);
+       //window.draw(Tower1);
        window.display();
    }
 
+   //************************************** */
+   //Tower class testing
+//    window.clear();
+//    window.draw(Tree1);
+//    window.draw(Tree2);
+//    window.display();
+
+   //************************************** */
 
     return 0;
 
