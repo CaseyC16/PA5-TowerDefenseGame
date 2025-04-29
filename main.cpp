@@ -8,11 +8,9 @@
  //COMPILE g++ -Wall main.cpp source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
  //On Mac: g++ -Wall -std=c++11 main.cpp source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
 #include <iostream>
-#include "../include/button.h"
-#include "../include/enemyclass.h"
-#include "../include/enemymovement.h"
-#include "../include/coneThrower.h"
-#include "../include/tower.h"
+#include "include/button.h"
+#include "include/enemyclass.h"
+#include "include/enemymovement.h"
 
 using std::cout;
 using std::endl;
