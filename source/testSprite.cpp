@@ -20,7 +20,7 @@ TestSprite::TestSprite(std::string fileName, sf::Vector2f position, sf::Vector2f
     mSprite.setPosition(mPosition.x,mPosition.y);
     //choose color
     // mSpriteColor = color;
-    // mSprite.setColor(mSpriteColor);
+    //mSprite.setColor(sf::Color::Red);
     //set size as a ratio of original size
     mSprite.setScale(size.x/imageSize.x, size.y/imageSize.y);
 
@@ -74,4 +74,9 @@ void TestSprite::setColor(sf::Color sprColor)
     //update color
     mSpriteColor = sprColor;
     mSprite.setColor(mSpriteColor);
+}
+
+void TestSprite::setTexture(sf::Texture tex)
+{
+    mTexture = tex;
 }

@@ -12,14 +12,15 @@ class Enemy
 {
     public:
     //constructor for class to setdefault health and speed
+    Enemy();
     Enemy(int h);
 
     int getHealth(){return mHealth;};
-    void setHealth(int health);
+    void setHealth(int health) {mHealth = health;}
     int getSpeed(){return mSpeed;};
     void setspeed(int speed);
 
-    ~Enemy(); //every time an enemy is destroyed, make player earn currency
+    ~Enemy() {} //every time an enemy is destroyed, make player earn currency
 
     private:
     int mHealth;

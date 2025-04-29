@@ -20,6 +20,7 @@ public:
     void setSize(sf::Vector2f  size);
     //change sprite color to color
     void setColor(sf::Color btnColor);
+    void setTexture(sf::Texture tex);
     
     sf::Sprite getSprite() {return mSprite;}
     sf::Vector2f getPosition(){return mPosition;}

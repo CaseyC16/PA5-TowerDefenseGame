@@ -5,18 +5,13 @@
  * @date 2025-04-09
  */
 
-<<<<<<< HEAD
- //COMPILE g++ -Wall *.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
- //On Mac: g++ -Wall -std=c++11 -o sfml-app source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
-=======
- //COMPILE g++ -Wall source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
- //On Mac: g++ -Wall -std=c++11 source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
->>>>>>> main
+ //COMPILE g++ -Wall main.cpp source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
+ //On Mac: g++ -Wall -std=c++11 main.cpp source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
 #include <iostream>
 #include "../include/button.h"
 #include "../include/enemyclass.h"
 #include "../include/enemymovement.h"
-#include "../include/testSprite.h"
+#include "../include/coneThrower.h"
 #include "../include/tower.h"
 
 using std::cout;
@@ -52,13 +47,8 @@ int main()
             While()
     */
     
-<<<<<<< HEAD
-   sf::RenderWindow window(sf::VideoMode(1600, 1200), "Squirrels Tower Defense");
-   Button rules("Rules",sf::Vector2f(200.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color::Green);
-=======
     sf::RenderWindow window(sf::VideoMode(800, 400), "Squirrels Tower Defense");
     Button rules("Rules",sf::Vector2f(200.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color::Green);
->>>>>>> main
    //changed color of first button
    rules.setColorTextHover(sf::Color::Green);
    rules.setColorTextNormal(sf::Color(95,25,10));
@@ -74,9 +64,11 @@ int main()
 
    //************************************** */
    //Tower class testing
-   TestSprite Tree1;
-   TestSprite Tree2("resources/testTree.png", sf::Vector2f(1000.f,500.f), sf::Vector2f(100.f,100.f));
-   ConeThrower Tower1(sf::Vector2f(1100.f, 550.f));
+//    TestSprite Tree1;
+//    TestSprite Tree2("resources/testTree.png", sf::Vector2f(700.f,300.f), sf::Vector2f(100.f,100.f));
+//    TestSprite Tree3("resources/testTree.png", sf::Vector2f(300.f,200.f), sf::Vector2f(100.f,100.f));
+   ConeThrower Tower1(sf::Vector2f(500.f, 250.f));
+   //Tower1.setSprite("resources/testTree.png");
    //************************************** */
 
    while(window.isOpen())
@@ -101,18 +93,20 @@ int main()
        window.draw(rules);
        window.draw(play);
        window.draw(header);
-       window.draw(Tree1);
-       window.draw(Tree2);
-       Tower1.drawTower(window);
+    //    window.draw(Tree1);
+    //    window.draw(Tree2);
+    //    window.draw(Tree3);
+       Tower1.draw(window);
+       //window.draw(Tower1);
        window.display();
    }
 
    //************************************** */
    //Tower class testing
-   window.clear();
-   window.draw(Tree1);
-   window.draw(Tree2);
-   window.display();
+//    window.clear();
+//    window.draw(Tree1);
+//    window.draw(Tree2);
+//    window.display();
 
    //************************************** */
 
