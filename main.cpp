@@ -7,10 +7,13 @@
 
  //COMPILE g++ -Wall main.cpp source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
  //On Mac: g++ -Wall -std=c++11 main.cpp source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
-#include <iostream>
-#include "include/button.h"
-#include "include/enemyclass.h"
-#include "include/enemymovement.h"
+ #include <iostream>
+ #include "include/button.h"
+ #include "include/enemyclass.h"
+ #include "include/enemymovement.h"
+ #include "include/coneThrower.h"
+ #include "include/branchSpike.h"
+ #include "include/assaultSquirrel.h"
 
 using std::cout;
 using std::endl;
@@ -66,6 +69,8 @@ int main()
 //    TestSprite Tree2("resources/testTree.png", sf::Vector2f(700.f,300.f), sf::Vector2f(100.f,100.f));
 //    TestSprite Tree3("resources/testTree.png", sf::Vector2f(300.f,200.f), sf::Vector2f(100.f,100.f));
    ConeThrower Tower1(sf::Vector2f(500.f, 250.f));
+   BranchSpike Tower2(sf::Vector2f(500.f,275.f));
+   AssaultSquirrel Tower3(sf::Vector2f(200.f,100.f));
    //Tower1.setSprite("resources/testTree.png");
    //************************************** */
 
@@ -91,22 +96,14 @@ int main()
        window.draw(rules);
        window.draw(play);
        window.draw(header);
-    //    window.draw(Tree1);
-    //    window.draw(Tree2);
-    //    window.draw(Tree3);
-       Tower1.draw(window);
-       //window.draw(Tower1);
+       //******************/
+       //Tower sprite testing
+    //    Tower1.draw(window);
+    //    Tower2.draw(window);
+    //    Tower3.draw(window);
+       //******************/
        window.display();
    }
-
-   //************************************** */
-   //Tower class testing
-//    window.clear();
-//    window.draw(Tree1);
-//    window.draw(Tree2);
-//    window.display();
-
-   //************************************** */
 
     return 0;
 
