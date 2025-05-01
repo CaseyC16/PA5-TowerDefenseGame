@@ -5,7 +5,7 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include <queue>
-#include "../include/enemyclass.h"
+#include "enemyclass.h"
 
 class Tower
 {
@@ -27,21 +27,9 @@ protected:
     //TestSprite mSprite; //tower sprite
     sf::Sprite mSprite {};
     sf::Vector2f mPos {0.f,0.f};
-    int mFireRate {0};
-    int mDamage {0};
+    int mFireRate {0}; //sleep time between attacks  
+    //int mDamage {0}; 
     std::queue<Enemy> mTargets;
-};
-
-class BranchSpike : public Tower  //tower that drops branches to impale enemies
-{
-public:
-    BranchSpike(sf::Vector2f position); //constructor
-};
-
-class ConeBomb : public Tower     //tower that throws exploding pinecones
-{
-public:
-    ConeBomb(sf::Vector2f position); //constructor
 };
 
 #endif
