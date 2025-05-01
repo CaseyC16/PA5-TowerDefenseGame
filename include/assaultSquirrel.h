@@ -1,15 +1,15 @@
-#ifndef CONETHROWER_H
-#define CONETHROWER_H
+#ifndef ASSAULTSQUIRREL_H
+#define ASSAULTSQUIRREL_H
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
 #include "tower.h"
 
-class ConeThrower : public Tower  //tower that throws individual pinecones
+class AssaultSquirrel : public Tower  //tower that drops branches to impale enemies
 {
 public:
-    ConeThrower(sf::Vector2f position); //constructor
+    AssaultSquirrel(sf::Vector2f position); //constructor
     virtual void attack(std::queue<Enemy> &q); //removes 1 hp from first enemy in queue
 };
 
