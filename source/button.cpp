@@ -59,7 +59,7 @@ Button::Button() : Button("Push me!", sf::Vector2f(300,100), sf::Vector2f(100,10
     mButton.setScale(1, 1);
 }
 
-void Button::update(sf::Event& e, sf::RenderWindow& window)
+bool Button::update(sf::Event& e, sf::RenderWindow& window)
 {
     sf::Vector2i mPos = sf::Mouse::getPosition(window);
     sf::Vector2f mousePosition = window.mapPixelToCoords(mPos);
@@ -98,8 +98,10 @@ void Button::update(sf::Event& e, sf::RenderWindow& window)
         {
             if(mouseInButton)
             {
-                mText.setFillColor(mTextHover);
                 mButton.setRotation(0);
+                mText.setFillColor(mTextHover);
+                
+                return true;
             }
             else
             {
@@ -108,6 +110,7 @@ void Button::update(sf::Event& e, sf::RenderWindow& window)
             }
         }
     }
+    return false;
 }
 
 void Button::draw(sf::RenderTarget& target,sf::RenderStates states) const

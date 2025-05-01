@@ -11,6 +11,10 @@
 #include "include/button.h"
 #include "include/enemyclass.h"
 #include "include/enemymovement.h"
+#include "include/coneThrower.h"
+#include "include/menu.h"
+#include "include/rules.h"
+#include "include/states.h"
 
 using std::cout;
 using std::endl;
@@ -18,6 +22,7 @@ using std::string;
 
 int main()
 {
+    sf::RenderWindow window(sf::VideoMode(800, 400), "Squirrels Tower Defense");
     /* OUTLINE
     Welcome Screen
         Play Button
@@ -45,59 +50,59 @@ int main()
             While()
     */
     
-    sf::RenderWindow window(sf::VideoMode(800, 400), "Squirrels Tower Defense");
-    Button rules("Rules",sf::Vector2f(200.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color::Green);
-   //changed color of first button
-   rules.setColorTextHover(sf::Color::Green);
-   rules.setColorTextNormal(sf::Color(95,25,10));
-   //bool viewRules = 0;
-   Button play("Play",sf::Vector2f(600.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color::Red);
-   //Changed Color of Second Button
-   play.setColorTextHover(sf::Color(95,25,10));
-   play.setColorTextNormal(sf::Color::Green);
-   //bool playGame = 0;
-   //extra button... Title????
-   Button header("Squirrels Tower Defense", sf::Vector2f(400,50), sf::Vector2f(200,100), sf::Color::Black);
-   header.setColorTextHover(sf::Color::Green);
-
+    Menu start;
+    Rules rules;
+    // Game game;
+    
    //************************************** */
    //Tower class testing
 //    TestSprite Tree1;
 //    TestSprite Tree2("resources/testTree.png", sf::Vector2f(700.f,300.f), sf::Vector2f(100.f,100.f));
 //    TestSprite Tree3("resources/testTree.png", sf::Vector2f(300.f,200.f), sf::Vector2f(100.f,100.f));
-   ConeThrower Tower1(sf::Vector2f(500.f, 250.f));
+//    ConeThrower Tower1(sf::Vector2f(500.f, 250.f));
    //Tower1.setSprite("resources/testTree.png");
    //************************************** */
 
-   while(window.isOpen())
-   {
-       sf::Event event;
-       while (window.pollEvent(event))
-       {
+    State currentState=MENU;
+    while(window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
             if (event.type == sf::Event::Closed)
                 window.close();
 
-            if(event.type == sf::Event::MouseButtonPressed)
+            if(event.type == sf::Event::MouseButtonPressed){
             
-
-
-           rules.update(event, window);
-           play.update(event, window);
-           header.update(event, window);
-       }
-
-
-       window.clear();
-       window.draw(rules);
-       window.draw(play);
-       window.draw(header);
+           // rules.update(event,window);
+                switch(currentState){
+                    case MENU: currentState=start.MenuUpdate(event,window);
+                        break;
+                    case RULES: currentState=rules.RulesUpdate(event,window);
+                        break;
+                    case GAME: //currentState=start.update(event,window);
+                        break;
+                }
+            }
+        }
+        window.clear();
+        //rules.draw(window);
+        switch(currentState){
+            case MENU: start.draw(window);
+                break;
+            case RULES: rules.draw(window);
+                break;
+            case GAME: //currentState=start.update(event,window);
+                break;
+        }
     //    window.draw(Tree1);
     //    window.draw(Tree2);
     //    window.draw(Tree3);
-       Tower1.draw(window);
+       //Tower1.draw(window);
        //window.draw(Tower1);
        window.display();
-   }
+    }
+
 
    //************************************** */
    //Tower class testing
