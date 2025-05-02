@@ -82,48 +82,77 @@
     rulesText.setPosition(400, 300);
     //Back button in Rules
     Button backButton("Back", {20, 20}, {100, 40}, sf::Color::Red);
- 
+    // Starting currency and round 
+    static int currency = 1;  
+    static int round = 1;
+    //Text for Displaying Currency
+    sf::Text currencyText("Acorns: " + std::to_string(currency), font, 20);
+    currencyText.setFillColor(sf::Color::White);
+    currencyText.setPosition(10, 10);
+    //Text for Displaying Round Number
+    sf::Text roundText("Round: " + std::to_string(round), font, 20);
+    roundText.setFillColor(sf::Color::White);
+    roundText.setPosition(10, 40);
+    //Object for SideBar Where You can Select Towers
+    sf::RectangleShape sidebar(sf::Vector2f(800.f / 8.f, 400.f));
+    sidebar.setPosition(800.f - (800.f / 8.f), 0);
+    sidebar.setFillColor(sf::Color(80, 80, 80));
+    // Texture for Map/Path
+    sf::Texture mapTexture;
+    mapTexture.loadFromFile("resources/final project image 2.0 cleaner.png");
+    if (!mapTexture.loadFromFile("resources/final project image 2.0 cleaner.png")) 
+    {
+        cout << "Failed to load map texture" << endl;
+        exit(1);
+    }
+    //Places the Texture onto a sprite that is mapped and scaled to the proper area.
+    sf::Sprite mapSprite(mapTexture);
+    mapSprite.setTextureRect(sf::IntRect(8, 685, 2564, 2152));
+    mapSprite.setScale(700.f / 2564.f, 400.f / 2152.f);
+
  
     while(window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
+            //Closes Window When X is Pressed
             if (event.type == sf::Event::Closed)
                 window.close();
  
- 
+            //Updates The Image of the button, used for the color change when hovering over it
             rulesButton.update(event, window);
             playButton.update(event, window);
  
+            //Checks if the user clicks on either button in the main screen and moves them to the correct
+            //Screen depending on what button they click on
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
             {
+                //Grabs the positon of the window and uses it to get mouse postion for click position detection
                 sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
                 sf::Vector2f mousePos = window.mapPixelToCoords(pixelPos);
-                if (state == TITLE_SCREEN && rulesButton.getDimensions().x > 0) 
+                //Detects if the player is on the title screen and if they clicked the rules button
+                if (state == TITLE_SCREEN && rulesButton.getBounds().contains(mousePos)) 
                 {
-                    if (rulesButton.getBounds().contains(mousePos))
-                    {
-                        state = RULES_SCREEN;
-                    }
+                    //Moves to Rules Screen
+                    state = RULES_SCREEN;
                 }
-                if (state == TITLE_SCREEN && playButton.getDimensions().x > 0) 
+                //Detects if the player is on the title screen and if they clicked the play button
+                else if (state == TITLE_SCREEN && playButton.getBounds().contains(mousePos)) 
                 {
-                    if (playButton.getBounds().contains(mousePos))
-                    {
-                        state = GAME_SCREEN;
-                    }
+                    //Moves into the Game
+                    state = GAME_SCREEN;
                 }
-                else if (state == RULES_SCREEN && backButton.getDimensions().x > 0) 
+                //Detects if the player is on the rules screen and if they clicked the back button
+                else if (state == RULES_SCREEN && backButton.getBounds().contains(mousePos)) 
                 {
-                    if (backButton.getBounds().contains(mousePos))
-                    {
-                        state = TITLE_SCREEN;
-                    }
+                    //Moves back to the Title Screen
+                    state = TITLE_SCREEN;
                 }
             }
         }
  
+        //Display Title Screen
         if (state == TITLE_SCREEN)
         {
             window.clear();
@@ -132,6 +161,7 @@
             window.draw(header);
             window.display();
         }
+        //Display Rules Screen
         else if (state == RULES_SCREEN)
         {
             window.clear();
@@ -140,10 +170,16 @@
             window.draw(backButton);
             window.display();
         }
+        //Display Game Screen
         else if (state == GAME_SCREEN)
         {
             window.clear();
-            // Temporary game screen view
+            window.draw(mapSprite);
+            currencyText.setString("Acorns: " + std::to_string(currency));
+            roundText.setString("Round: " + std::to_string(round));
+            window.draw(currencyText);
+            window.draw(roundText);
+            window.draw(sidebar);
             window.display();
         }
         
