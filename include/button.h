@@ -37,6 +37,9 @@ public:
     void update(sf::Event& e, sf::RenderWindow& window);
     virtual void draw(sf::RenderTarget& target,sf::RenderStates states) const;
 
+    //Bounds Check
+    sf::FloatRect getBounds() const {return mButton.getGlobalBounds();};
+
 private:
     sf::Sprite mButton;
     sf::Texture mTexture;
