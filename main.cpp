@@ -18,38 +18,9 @@
  
  int main()
  {
-     enum Screen {TITLE_SCREEN, RULES_SCREEN, GAME_SCREEN};
- 
-     //set default state
-     Screen state = TITLE_SCREEN;
- 
-     /* OUTLINE
-     Welcome Screen
-         Play Button
-         How to Play Button
- 
-     Game Loop
-         Display the Stage and UI
-             Current Money
-             Current Round
-             Available Squirels to Purchase
-         Allow Player to Puchase and Place Squirels
-         Play Button to Initiate Rounds
-             Begin Summoning and Movement of Humans
-             Stop Upon the Conclusion of Each Round & Repeat
-     */
- 
-     /*
-         Welcome Screen
-             Use Button Class to Make Button Objects w/ interaction when clicked
-                 One Button Labeled Play, the Other Labeled Rules
-                     Play: Takes Player into the Game Loop 
-                     Rules: Takes Player into a Screen with How to Play. Keep Same Wallpaper as Title Screen
- 
-         Game Loop
-             While()
-    */
-     
+    enum Screen {TITLE_SCREEN, RULES_SCREEN, GAME_SCREEN};
+    //set default state
+    Screen state = TITLE_SCREEN;
     //Create Game Window
     sf::RenderWindow window(sf::VideoMode(800, 400), "Squirrels Tower Defense");
     //Create Font and check if it loads properly
@@ -71,7 +42,6 @@
     sf::Text header("SQUIRRELS TOWER DEFENSE", font, 40);
     header.setFillColor(sf::Color(95, 25, 10));
     header.setPosition(150, 50);
-     
     //Rules Title and Text for when Button is pressed
     sf::Text rulesTitle("RULES", font, 40);
     rulesTitle.setPosition(330, 20);
@@ -81,7 +51,7 @@
     rulesText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
     rulesText.setPosition(400, 300);
     //Back button in Rules
-    Button backButton("Back", {20, 20}, {100, 40}, sf::Color::Red);
+    Button backButton("Back", {50, 20}, {100, 40}, sf::Color::Red);
     // Starting currency and round 
     static int currency = 1;  
     static int round = 1;
@@ -96,7 +66,7 @@
     //Object for SideBar Where You can Select Towers
     sf::RectangleShape sidebar(sf::Vector2f(800.f / 8.f, 400.f));
     sidebar.setPosition(800.f - (800.f / 8.f), 0);
-    sidebar.setFillColor(sf::Color(80, 80, 80));
+    sidebar.setFillColor(sf::Color(95, 25, 10));
     // Texture for Map/Path
     sf::Texture mapTexture;
     mapTexture.loadFromFile("resources/final project image 2.0 cleaner.png");
@@ -109,7 +79,12 @@
     sf::Sprite mapSprite(mapTexture);
     mapSprite.setTextureRect(sf::IntRect(8, 685, 2564, 2152));
     mapSprite.setScale(700.f / 2564.f, 400.f / 2152.f);
-
+    //Buttons for the Towers & Round Start Button
+    Button towerBtn1("1", {750.f, 100.f}, {40.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn2("2", {750.f, 160.f}, {40.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn3("3", {750.f, 220.f}, {40.f, 40.f}, sf::Color(54, 50, 168));
+    Button roundStartButton("START", {750.f, 350.f}, {90.f, 60.f}, sf::Color::Green);
+    roundStartButton.setColorTextNormal(sf::Color(95, 25, 10));
  
     while(window.isOpen())
     {
@@ -123,6 +98,10 @@
             //Updates The Image of the button, used for the color change when hovering over it
             rulesButton.update(event, window);
             playButton.update(event, window);
+            towerBtn1.update(event, window);
+            towerBtn2.update(event, window);
+            towerBtn3.update(event, window);
+            roundStartButton.update(event, window);
  
             //Checks if the user clicks on either button in the main screen and moves them to the correct
             //Screen depending on what button they click on
@@ -149,6 +128,26 @@
                     //Moves back to the Title Screen
                     state = TITLE_SCREEN;
                 }
+
+                if (state == GAME_SCREEN) 
+                {
+                    if (towerBtn1.getBounds().contains(mousePos)) 
+                    {
+                        cout << "Tower 1 button clicked!" << endl;
+                    }
+                    if (towerBtn2.getBounds().contains(mousePos)) 
+                    {
+                        cout << "Tower 2 button clicked!" << endl;
+                    }
+                    if (towerBtn3.getBounds().contains(mousePos)) 
+                    {
+                        cout << "Tower 3 button clicked!" << endl;
+                    }
+                    if(roundStartButton.getBounds().contains(mousePos))
+                    {
+                        cout << "Round __ Start!" << endl;
+                    }
+                }
             }
         }
  
@@ -156,35 +155,48 @@
         if (state == TITLE_SCREEN)
         {
             window.clear();
+
             window.draw(rulesButton);
             window.draw(playButton);
+
             window.draw(header);
+
             window.display();
         }
         //Display Rules Screen
         else if (state == RULES_SCREEN)
         {
             window.clear();
+
             window.draw(rulesTitle);
             window.draw(rulesText);
+
             window.draw(backButton);
+
             window.display();
         }
         //Display Game Screen
         else if (state == GAME_SCREEN)
         {
             window.clear();
+
+            mapSprite.setScale(700.f / 2564.f, 400.f / 2152.f);
             window.draw(mapSprite);
+
             currencyText.setString("Acorns: " + std::to_string(currency));
             roundText.setString("Round: " + std::to_string(round));
             window.draw(currencyText);
             window.draw(roundText);
+
             window.draw(sidebar);
+            window.draw(towerBtn1);
+            window.draw(towerBtn2);
+            window.draw(towerBtn3);
+            window.draw(roundStartButton);
+
             window.display();
         }
         
     }
     return 0;
 }
-
-//d
