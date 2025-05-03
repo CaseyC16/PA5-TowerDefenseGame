@@ -269,6 +269,13 @@
             {
                 roundInProgress = false;
                 round++;
+
+                // Frees the memory for each enemy spawned at the beginning of the round
+               for (size_t i = 0; i < currentEnemies.size(); ++i)
+               {
+                   delete currentEnemies[i];
+               }
+
                 currentEnemies.clear();
             }
 
@@ -288,5 +295,6 @@
         }
         
     }
+
     return 0;
 }
