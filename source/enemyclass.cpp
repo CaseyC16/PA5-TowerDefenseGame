@@ -18,19 +18,19 @@ void Enemy::setType(enemyType newType)
     {
         setHealth(1);
         setSpeed(1);
-        setSprite("enemy_farmer.png");
+        setSprite("resources/enemy_farmer.png");
     }
     if(mType == knight)
     {
         setHealth(2);
         setSpeed(2);
-        setSprite("enemy_armor.png");
+        setSprite("resources/enemy_armor.png");
     }
     if(mType == heavyKnight)
     {
         setHealth(3);
         setSpeed(3);
-        setSprite("enemy_heavyarmor.png");
+        setSprite("resources/enemy_heavyarmor.png");
     }
 }
 
