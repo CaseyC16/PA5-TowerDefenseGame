@@ -3,13 +3,17 @@
 AssaultSquirrel::AssaultSquirrel(sf::Vector2f position)
 {
     //load texture
-    if(!mTexture.loadFromFile("resources/squirrel_aiming_transparent.png"))
+    if(!mTexture.loadFromFile("resources/assaultSquirrel.png"))
     {
         std::cout<<"Error opening file\n";
         exit(1);
     }
     mSprite.setTexture(mTexture);
-    mSprite.setScale(sf::Vector2f(0.1f,0.1f));
+    sf::Vector2u textureSize = mTexture.getSize();
+    float scaleX = 64.0f / textureSize.x;
+    float scaleY = 64.0f / textureSize.y;
+    mSprite.setScale(sf::Vector2f(scaleX, scaleY));
+    // mSprite.setScale(sf::Vector2f(0.1f,0.1f));
     mRadius = 25;
     mPos = position;
     mFireRate = 15; //sleep 15 seconds between attacks

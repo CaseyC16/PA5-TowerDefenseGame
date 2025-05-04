@@ -3,12 +3,16 @@
 ConeThrower::ConeThrower(sf::Vector2f position)
 {
     //load texture
-    if(!mTexture.loadFromFile("resources/testTree.png"))
+    if(!mTexture.loadFromFile("resources/coneSquirrel.png"))
     {
         std::cout<<"Error opening file\n";
         exit(1);
     }
     mSprite.setTexture(mTexture);
+    sf::Vector2u textureSize = mTexture.getSize();
+    float scaleX = 64.0f / textureSize.x;
+    float scaleY = 64.0f / textureSize.y;
+    mSprite.setScale(sf::Vector2f(scaleX, scaleY));
     mRadius = 50;
     mPos = position;
     mFireRate = 1; //sleep one second between attacks

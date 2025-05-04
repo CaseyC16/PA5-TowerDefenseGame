@@ -12,6 +12,9 @@
  #include "include/button.h"
  #include "include/enemyclass.h"
  #include "include/enemymovement.h"
+ #include "include/coneThrower.h"
+ #include "include/archerSquirrel.h"
+ #include "include/assaultSquirrel.h"
  
  using std::cout;
  using std::endl;
@@ -53,11 +56,12 @@
     rulesText.setPosition(400, 300);
     //Back button in Rules
     Button backButton("Back", {50, 20}, {100, 40}, sf::Color::Red);
-    // Data For Round, Curreny, and Enemies
+    // Data For Round, Currency, Enemies, and Towers
     static int currency = 1;  
     static int round = 1;
     bool roundInProgress = false;
     std::vector<Enemy*> currentEnemies;
+    std::vector<Tower*> placedTowers;
     //Text for Displaying Currency
     sf::Text currencyText("Acorns: " + std::to_string(currency), font, 20);
     currencyText.setFillColor(sf::Color::White);
@@ -170,23 +174,29 @@
                 if (state == GAME_SCREEN) 
                 {
                     
-                    if (towerBtn1.getBounds().contains(mousePos)) 
+                    if(towerBtn1.getBounds().contains(mousePos)) // && currency >= 1 (check if player has enough money)
                     {
                         //Needs to Allow Player to Spawn and Place the Tower
                         //Placeholder for now
                         cout << "Tower 1 button clicked!" << endl;
+                        Tower *a = new ConeThrower(sf::Vector2f(100.f,100.f));
+                        placedTowers.push_back(a);
                     }
-                    if (towerBtn2.getBounds().contains(mousePos)) 
+                    if (towerBtn2.getBounds().contains(mousePos)) // && currency >= 2 (check if player has enough money)
                     {
                         //Needs to Allow Player to Spawn and Place the Tower
                         //Placeholder for now
                         cout << "Tower 2 button clicked!" << endl;
+                        Tower *b = new ArcherSquirrel(sf::Vector2f(100.f,175.f));
+                        placedTowers.push_back(b);
                     }
-                    if (towerBtn3.getBounds().contains(mousePos)) 
+                    if (towerBtn3.getBounds().contains(mousePos)) // && currency >= 3 (check if player has enough money)
                     {
                         //Needs to Allow Player to Spawn and Place the Tower
                         //Placeholder for now                        
                         cout << "Tower 3 button clicked!" << endl;
+                        Tower *c = new AssaultSquirrel(sf::Vector2f(100.f,250.f));
+                        placedTowers.push_back(c);
                     }
                     //Starts the Round as long as its not already started
                     if (roundStartButton.getBounds().contains(mousePos) && !roundInProgress)
@@ -262,6 +272,12 @@
                         allDead = false;
                     }
                 }
+            }
+
+            //draw any placed towers
+            for (size_t i = 0; i < placedTowers.size(); i++)
+            {
+                placedTowers[i]->draw(window);
             }
 
             //Ends the round and moves it forward after all enemies are defeated
