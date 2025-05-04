@@ -8,16 +8,14 @@
 //make an enum for a debuff state and normal state
 //enum state {normal, debuff};
 //make an enum for if the enemy got killed by a tower 
-//or gets destroyed by reaching the end of the path
-//enum destroyed {tower, path}
 //make an enum for enemy types
 enum enemyType {peasant, knight, heavyKnight};
 
-//when an enemy is hit with an attack, delete the instance of the enemy and make and enemy with a lower class
+
 class Enemy
 {
     public:
-    //constructor for class to setdefault health and speed
+    //constructor for class to set default health and speed
     Enemy(enemyType type);
 
     //getter and setter functions
@@ -33,24 +31,29 @@ class Enemy
         enemyType getType() const {return mType;}
         void setType(enemyType newType);
 
-        //set enemy sprite when spawned
-        const sf::Sprite & getSprite() const {return mSprite;}
+        //enemy sprite
+        sf::Sprite & getSprite() {return mSprite;}
         void setSprite(const std::string & sprite);
         void drawSprite(sf::RenderWindow & window);
 
-    //other functions
+        //enemy waypoints
+        int getCurrentWaypoint() const { return mCurrentWaypoint; }
+        void setCurrentWaypoint(int index) { mCurrentWaypoint = index; }
+
+    //towers target enemies
     void targeted();
 
     //destructor
-    ~Enemy(); //every time an enemy is destroyed, make player earn currency
+    ~Enemy(); //every time an enemy is destroyed make player earn currency
 
     private:
+
     int mHealth;
     int mSpeed;
+    int mCurrentWaypoint;
     sf::Sprite mSprite;
     sf::Texture mTexture;
     enemyType mType;
-
 };
 
 #endif //guard code
