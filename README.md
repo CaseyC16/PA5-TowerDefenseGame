@@ -18,19 +18,19 @@ In short, purchase specialized squirrels from fallen humans to defend the forest
 Meet the Specialized Soldier Squirrels!
 
 CONETHROWER
-resources/coneSquirrel.png
+![alt text](coneSquirrel.png)
 
 - The most basic of squirrels, only costing 50 acorns to hire
 - Attacks one human, while dealing one damage per throw
 
 ARCHER
-resources/archerSquirrel.png
+![alt text](archerSquirrel.png)
 
 - An evolution of the Conethrower, costing 80 acorns to hire
 - Attacks all humans in its firing range, dealing one damage to each human
 
 ASSAULT
-resources/assaultSquirrel.png
+![alt text](assaultSquirrel.png)
 
 - The pinnacle of the squirrel combat force, costing a hefty 200 acorns to hire
 - Attacks and kills all humans within its radius instantly
