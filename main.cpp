@@ -57,7 +57,7 @@
     //Back button in Rules
     Button backButton("Back", {50, 20}, {100, 40}, sf::Color::Red);
     // Data For Round, Currency, Enemies, and Towers
-    static int currency = 1;  
+    static int currency = 100;  
     static int round = 1;
     bool roundInProgress = false;
     std::vector<Enemy*> currentEnemies;
@@ -87,9 +87,9 @@
     mapSprite.setTextureRect(sf::IntRect(8, 685, 2564, 2152));
     mapSprite.setScale(700.f / 2564.f, 400.f / 2152.f);
     //Buttons for the Towers & Round Start Button
-    Button towerBtn1("1", {750.f, 100.f}, {40.f, 40.f}, sf::Color(54, 50, 168));
-    Button towerBtn2("2", {750.f, 160.f}, {40.f, 40.f}, sf::Color(54, 50, 168));
-    Button towerBtn3("3", {750.f, 220.f}, {40.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn1("Cone\n  50", {750.f, 100.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn2("Archer\n   80", {750.f, 160.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn3("Assault\n   200", {750.f, 220.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
     Button roundStartButton("START", {750.f, 350.f}, {90.f, 60.f}, sf::Color::Green);
     roundStartButton.setColorTextNormal(sf::Color(95, 25, 10));
     //Text for Game Over Screen
@@ -159,7 +159,7 @@
                     if (retryButton.getBounds().contains(mousePos))
                     {
                         round = 1;
-                        currency = 1;
+                        currency = 100;
                         state = GAME_SCREEN;
                         currentEnemies.clear();
                     }
