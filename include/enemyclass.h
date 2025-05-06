@@ -4,6 +4,7 @@
 #define TEXTURE_LOADING_ERROR 2
 
 #include <iostream>
+#include <cmath>
 #include <SFML/Graphics.hpp>
 //make an enum for a debuff state and normal state
 //enum state {normal, debuff};
@@ -37,11 +38,21 @@ class Enemy
         void drawSprite(sf::RenderWindow & window);
 
         //enemy waypoints
-        int getCurrentWaypoint() const { return mCurrentWaypoint; }
-        void setCurrentWaypoint(int index) { mCurrentWaypoint = index; }
+        //int getCurrentWaypoint() const { return mCurrentWaypoint; }
+        //void setCurrentWaypoint(int index) { mCurrentWaypoint = index; }
 
     //towers target enemies
     void targeted();
+
+    //moves the enemies
+    int getCurrentWaypoint() const { return mCurrentWaypoint; }
+    void setCurrentWaypoint(int waypoint);
+    void updateMovement(const std::vector<sf::Vector2f>& waypoints);
+    //static void EnemyMovementPath();
+    
+    //define vectors for waypoints
+    //static std::vector<sf::Vector2f> waypoints;
+    //static sf::Vector2f startPos;
 
     //destructor
     ~Enemy(); //every time an enemy is destroyed make player earn currency
