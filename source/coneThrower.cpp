@@ -38,7 +38,7 @@ void ConeThrower::attack(std::queue<Enemy> &q)
 bool ConeThrower::placeTower(Tower *tower, sf::Vector2f position, std::vector<Tower*> &placedTowers, int &currency, sf::FloatRect mapBounds)
 {
     //Check if position is on the map
-    if(!checkPath(position, mapBounds, placedTowers))
+    if(!checkBounds(position, mapBounds, placedTowers))
     {
         std::cout << "Invalid placement - click again on a valid location to place tower." << std::endl;
         return false;
