@@ -18,22 +18,23 @@ void Enemy::setType(enemyType newType)
     {
         setHealth(1);
         setSpeed(1);
-        setSprite("enemy_farmer.png");
+        setSprite("resources/enemy_farmer.png");
     }
     if(mType == knight)
     {
         setHealth(2);
         setSpeed(2);
-        setSprite("enemy_armor.png");
+        setSprite("resources/enemy_armor.png");
     }
     if(mType == heavyKnight)
     {
         setHealth(3);
         setSpeed(3);
-        setSprite("enemy_heavyarmor.png");
+        setSprite("resources/enemy_heavyarmor.png");
     }
 }
 
+//sets health for enemy
 void Enemy::setHealth(int newhealth)
 {
     if(newhealth >= 0)
@@ -42,11 +43,13 @@ void Enemy::setHealth(int newhealth)
     }
 }
 
+//sets speed for enemy
 void Enemy::setSpeed(int newspeed)
 {
     mSpeed = newspeed;
 }
 
+//sets the sprite
 void Enemy::setSprite(const std::string & sprite)
 {
     if (!mTexture.loadFromFile(sprite))
@@ -56,14 +59,16 @@ void Enemy::setSprite(const std::string & sprite)
     mSprite.setTexture(mTexture);
 }
 
+//draws the sprite
 void Enemy::drawSprite(sf::RenderWindow & window)
 {
     window.draw(mSprite);
 }
 
+//when an enemy is hit with an attack delete the instance of the enemy and make and enemy with a lower class
 void Enemy::targeted() 
 {
-    // Reduce health
+    // reduce health
     setHealth(getHealth() - 1);
 
     // changing enemy type
