@@ -10,15 +10,19 @@ AssaultSquirrel::AssaultSquirrel(sf::Vector2f position)
     }
     mSprite.setTexture(mTexture);
     sf::Vector2u textureSize = mTexture.getSize();
-    float scaleX = 64.0f / textureSize.x;
-    float scaleY = 64.0f / textureSize.y;
+    float scaleX = 60.0f / textureSize.x;
+    float scaleY = 60.0f / textureSize.y;
     mSprite.setScale(sf::Vector2f(scaleX, scaleY));
-    // mSprite.setScale(sf::Vector2f(0.1f,0.1f));
+
+    //set origin to center
+    sf::FloatRect bounds = mSprite.getLocalBounds();
+    mSprite.setOrigin(sf::Vector2f(bounds.width / 2.f, bounds.height / 2.f));
     mRadius = 25;
     mPos = position;
     mFireRate = 15; //sleep 15 seconds between attacks
     //mDamage = 10; //destroy all enemies in range
     mSprite.setPosition(mPos);
+    mCost = 200;
 }
 
 void AssaultSquirrel::attack(std::queue<Enemy> &q)
@@ -35,4 +39,27 @@ void AssaultSquirrel::attack(std::queue<Enemy> &q)
         //shoot at enemy
         temp.targeted();
     }
+}
+
+bool AssaultSquirrel::placeTower(Tower *tower, sf::Vector2f position, std::vector<Tower*> &placedTowers, int &currency, sf::FloatRect mapBounds)
+{
+    //Check if position is on the map
+    if(!checkPath(position, mapBounds, placedTowers))
+    {
+        std::cout << "Invalid placement - click again on a valid location to place tower." << std::endl;
+        return false;
+    }
+
+    //Check if player has enough currency
+    if(currency <= 200)
+    {
+        std::cout << "Not enough currency to place tower." << std::endl;
+        return false;
+    }
+
+    Tower *newTower = new AssaultSquirrel(sf::Vector2f(position));
+    std::cout << "Placed Assault Squirrel at x = " << position.x << ", y = " << position.y << std::endl;
+    placedTowers.push_back(newTower);
+    currency -= 200;
+    return true;
 }
