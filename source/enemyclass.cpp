@@ -86,6 +86,59 @@ void Enemy::targeted()
     }
 }
 
+void Enemy::setCurrentWaypoint(int waypoint)
+{
+    mCurrentWaypoint = waypoint;
+}
+
+void Enemy::updateMovement(const std::vector<sf::Vector2f>& waypoints)
+{
+    if ( mCurrentWaypoint < static_cast<int>(waypoints.size()))
+    {
+        sf::Vector2f target = waypoints[mCurrentWaypoint];
+        sf::Vector2f currentPos = mSprite.getPosition();
+        sf::Vector2f direction = target - currentPos;
+        float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+        // how far an enemy can move per step
+        float movement = static_cast<float>(getSpeed());
+
+        // if the enemy is not close enough to the waypoint
+        if (distance > movement) 
+        {
+            // look for direction to head towards
+            direction /= distance; 
+            mSprite.move(direction * movement);
+        }
+        // if the enemy is close enough to the waypoint move on to the next waypoint
+        else 
+        {   
+            direction /= distance; 
+            mSprite.move(direction * movement);
+
+            //make sure that enemy doesnt pass the waypoint after it moves
+            mSprite.setPosition(target);
+            mCurrentWaypoint++;
+        }
+    }
+    else
+    {
+
+    }
+}
+
+// void Enemy::EnemyMovementPath()
+// {
+//         // waypoints for the enemies to traverse
+//         waypoints.push_back(sf::Vector2f(52.5f, 20.0f));  // first
+//         waypoints.push_back(sf::Vector2f(105.0f, 70.0f)); // second
+//         waypoints.push_back(sf::Vector2f(128.0f, 110.0f)); // third
+//         waypoints.push_back(sf::Vector2f(402.5f, 220.0f)); // final path
+
+//         //spawning position
+//         startPos = waypoints.front();
+// }
+
 Enemy::~Enemy()
 {
     //rewarded with nuts when enemy is defeated
