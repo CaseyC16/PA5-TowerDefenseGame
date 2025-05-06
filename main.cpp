@@ -35,45 +35,61 @@
         exit(1);
     }
     Button rulesButton("Rules",sf::Vector2f(200.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color(50, 168, 82));
+
     //changed color of first button
     rulesButton.setColorTextHover(sf::Color(160,40,40));
     rulesButton.setColorTextNormal(sf::Color(54, 50, 168));
     Button playButton("Play",sf::Vector2f(600.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color(50, 168, 82));
+
     //Changed Color of Second Button
     playButton.setColorTextHover(sf::Color(160,40,40));
     playButton.setColorTextNormal(sf::Color(54, 50, 168));
+
     //Title Text
     sf::Text header("SQUIRRELS TOWER DEFENSE", font, 40);
     header.setFillColor(sf::Color(95, 25, 10));
     header.setPosition(150, 50);
+
     //Rules Title and Text for when Button is pressed
     sf::Text rulesTitle("RULES", font, 40);
     rulesTitle.setPosition(330, 20);
     sf::Text rulesText("Placeholder text for how to play...", font, 24);
+
     //Center the text vertically
     sf::FloatRect textRect = rulesText.getLocalBounds();
     rulesText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
     rulesText.setPosition(400, 300);
+
     //Back button in Rules
     Button backButton("Back", {50, 20}, {100, 40}, sf::Color::Red);
+
     // Data For Round, Currency, Enemies, and Towers
-    static int currency = 1;  
+    std::vector<sf::Vector2f> waypoints;
+    waypoints.push_back(sf::Vector2f(52.5f, 20.0f));  // first
+    waypoints.push_back(sf::Vector2f(105.0f, 70.0f)); // second
+    waypoints.push_back(sf::Vector2f(128.0f, 110.0f)); // third
+    waypoints.push_back(sf::Vector2f(402.5f, 220.0f)); // final path
+    static int currency = 100;  
     static int round = 1;
     bool roundInProgress = false;
     std::vector<Enemy*> currentEnemies;
     std::vector<Tower*> placedTowers;
+
     //Text for Displaying Currency
     sf::Text currencyText("Acorns: " + std::to_string(currency), font, 20);
     currencyText.setFillColor(sf::Color::White);
     currencyText.setPosition(10, 10);
+
     //Text for Displaying Round Number
     sf::Text roundText("Round: " + std::to_string(round), font, 20);
     roundText.setFillColor(sf::Color::White);
     roundText.setPosition(10, 40);
+
     //Object for SideBar Where You can Select Towers
     sf::RectangleShape sidebar(sf::Vector2f(800.f / 8.f, 400.f));
     sidebar.setPosition(800.f - (800.f / 8.f), 0);
     sidebar.setFillColor(sf::Color(95, 25, 10));
+
     // Texture for Map/Path
     sf::Texture mapTexture;
     mapTexture.loadFromFile("resources/final project image 2.0 cleaner.png");
@@ -82,16 +98,19 @@
         cout << "Failed to load map texture" << endl;
         exit(1);
     }
+
     //Places the Texture onto a sprite that is mapped and scaled to the proper area.
     sf::Sprite mapSprite(mapTexture);
     mapSprite.setTextureRect(sf::IntRect(8, 685, 2564, 2152));
     mapSprite.setScale(700.f / 2564.f, 400.f / 2152.f);
+
     //Buttons for the Towers & Round Start Button
-    Button towerBtn1("1", {750.f, 100.f}, {40.f, 40.f}, sf::Color(54, 50, 168));
-    Button towerBtn2("2", {750.f, 160.f}, {40.f, 40.f}, sf::Color(54, 50, 168));
-    Button towerBtn3("3", {750.f, 220.f}, {40.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn1("Cone\n  50", {750.f, 100.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn2("Archer\n   80", {750.f, 160.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn3("Assault\n   200", {750.f, 220.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
     Button roundStartButton("START", {750.f, 350.f}, {90.f, 60.f}, sf::Color::Green);
     roundStartButton.setColorTextNormal(sf::Color(95, 25, 10));
+
     //Text for Game Over Screen
     sf::Text gameOverHeader("GAME OVER...", font, 40);
     gameOverHeader.setFillColor(sf::Color::Red);
@@ -99,6 +118,7 @@
     sf::Text gameOverText("The Humans Burned Your Forest :(", font, 30);
     gameOverText.setFillColor(sf::Color(160,40,40));
     gameOverText.setPosition(150, 115);
+    
     //Buttons for Game Over Screen
     Button retryButton("Retry?",sf::Vector2f(200.f,300.f), sf::Vector2f(200.f, 71.f), sf::Color(50, 168, 82));
     retryButton.setColorTextHover(sf::Color(160,40,40));
@@ -159,7 +179,7 @@
                     if (retryButton.getBounds().contains(mousePos))
                     {
                         round = 1;
-                        currency = 1;
+                        currency = 100;
                         state = GAME_SCREEN;
                         currentEnemies.clear();
                     }
@@ -206,6 +226,9 @@
                         for (int i = 0; i < 10 + round * 2; ++i)
                         {
                             Enemy * e = new Enemy(peasant);
+                            currentEnemies.push_back(e);
+                            e->getSprite().setPosition(waypoints[0]);
+                            e->setCurrentWaypoint(1); // Next waypoint is index 1.
                             currentEnemies.push_back(e);
                         }
                     }
@@ -265,6 +288,7 @@
                 if (currentEnemies[i])
                 {
                     //Draw the enemy
+                    currentEnemies[i]->updateMovement(waypoints);
                     currentEnemies[i]->drawSprite(window);
                     //Checks if the enemy is alive
                     if (1) //Add the way to check if the enemy is alive as a condition when implimented
