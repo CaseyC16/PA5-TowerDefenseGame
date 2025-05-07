@@ -70,12 +70,7 @@
     size_t spawnCount = 0;
     sf::Clock enemySpawnTimer;
     std::vector<sf::Vector2f> waypoints;
-    waypoints.push_back(sf::Vector2f(52.5f, 20.0f));  // first
-    waypoints.push_back(sf::Vector2f(105.0f, 70.0f)); // second
-    waypoints.push_back(sf::Vector2f(128.0f, 110.0f)); // third
-    waypoints.push_back(sf::Vector2f(402.5f, 220.0f)); // final path
-    static int currency = 100;  
-    //first loop
+    // Define waypoints for enemy path
     waypoints.push_back(sf::Vector2f(160.0f, 0.0f));  // spawn
     waypoints.push_back(sf::Vector2f(160.0f, 100.0f)); // upper 1
     waypoints.push_back(sf::Vector2f(160.0f, 315.0f)); // lower 1
@@ -95,6 +90,8 @@
     waypoints.push_back(sf::Vector2f(670.0f, 315.0f)); // lower 3
     waypoints.push_back(sf::Vector2f(670.0f, 400.0f)); // end  
 
+
+    static int currency = 100;  
     static int round = 1;
     bool roundInProgress = false;
     //moved to Game class
@@ -119,7 +116,6 @@
 
     // Texture for Map/Path
     sf::Texture mapTexture;
-    mapTexture.loadFromFile("resources/final project image 2.0 cleaner.png");
     if (!mapTexture.loadFromFile("resources/final project image 2.0 cleaner.png")) 
     {
         cout << "Failed to load map texture" << endl;
@@ -160,7 +156,13 @@
     bool isPlacingTower3 = false;
     Tower *newTower = nullptr;
     std::vector<Coin> pineCoins;
+    sf::Vector2f coinPos;
+    Coin coinForKill;
+    bool enemyKill=false;
 
+    // Variables for enemy spawning
+    size_t maxEnemiesThisRound = 0;
+    
     while(window.isOpen())
     {
         sf::Event event;
@@ -225,6 +227,7 @@
                 }
                 
                 //Detects When A Button on the Game Screen in Clicked
+
                 if (state == GAME_SCREEN) 
                 {
                     if (event.type == sf::Event::MouseButtonPressed)
@@ -294,6 +297,11 @@
                         {
                             frameCount++;
                         }
+                        //Spawns a specified number of enemies depending on the round number
+                        maxEnemiesThisRound = 10 + round * 2;
+                        spawnCount = 0;
+                        frameCount = 0;
+
                     }
                 }
             }
@@ -350,6 +358,27 @@
             // coinPosition.x=100;coinPosition.y=185;
             // Coin currencyCoin(coinPosition);
 
+            // Enemy spawning logic
+            if (roundInProgress && spawnCount < maxEnemiesThisRound)
+            {
+                if (frameCount >= 30) // Spawn an enemy every 30 frames
+                {
+                    Enemy *e = new Enemy(peasant);
+                    e->getSprite().setPosition(waypoints[0]); // Set initial position
+                    e->setCurrentWaypoint(1); // Next waypoint is index 1
+                    game1.addEnemy(e); // Add to game
+                    
+                    spawnCount++;
+                    frameCount = 0;
+                    
+                    std::cout << "Spawned enemy " << spawnCount << " of " << maxEnemiesThisRound << std::endl;
+                }
+                else
+                {
+                    frameCount++;
+                }
+            }
+
             //Assumes all enemies are dead unless the check below states otherwise
             bool allDead = true;
             //Iterates through every enemy spawned
@@ -365,35 +394,54 @@
                     //Draw the enemy
                     currentEnemies[i]->updateMovement(waypoints);
                     currentEnemies[i]->drawSprite(window);
+                    
                     //Checks if the enemy is alive
-                    if (1) //Add the way to check if the enemy is alive as a condition when implemented
+                    if (currentEnemies[i]->getHealth() > 0) // Check if enemy is alive
                     {
                         allDead = false;
                     }
+                    else{
+                        currency+=2;
+                        coinPos=(currentEnemies[i]->getSprite()).getPosition();
+                        coinForKill.setPosition(coinPos);
+                        enemyKill=true;
+                    }
+                    // if(frameCount==10)
+                    //     currentEnemies[i]->setHealth(0);
                 }
+            }enemyKill=true;
+            static int coinflip=0; //need to make this transition slower, probably with a count so that it isnt too fast
+            if (enemyKill&&!coinflip%10){
+                coinForKill.setRotation(0);
+                coinForKill.drawSprite(window);
+            }else if(enemyKill&&!coinflip%5){
+                coinForKill.setRotation(180);
+                coinForKill.drawSprite(window);
             }
+            coinflip++;
+
 
             //draw any placed towers
             for (int i = 0; i < game1.getNumOfTowers(); i++) //should be an int, not a size_t, checking for how many towers there are
             {
                 (game1.getTowers())[i]->draw(window);
             }
+            
 
             //Ends the round and moves it forward after all enemies are defeated
-            if (roundInProgress && allDead)
+            if (roundInProgress && allDead && spawnCount >= maxEnemiesThisRound)
             {
                 roundInProgress = false;
                 round++;
+                
+                // Add currency for completing the round
+                currency += 25 + (round * 5);
 
-                // Frees the memory for each enemy spawned at the beginning of the round
-               for (size_t i = 0; i < currentEnemies.size(); ++i)
-               {
-                   delete currentEnemies[i];
-               }
-               //clear enemy vector
-               game1.clearEnemies();
+                // Clear enemies for the next round
+                game1.clearEnemies();
             }
-
+            coinForKill.setRotation(180);
+            coinForKill.drawSprite(window);
             window.display();
         }
         else if(state == GAME_OVER_SCREEN)

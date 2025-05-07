@@ -7,7 +7,7 @@ Coin::Coin(){
     }
     mCoinSprite.setTexture(mCoinTexture);
     mCoinSprite.setScale(0.1f,0.1f);
-    mCoinSprite.setPosition(250.0f,70.0f);
+    mCoinSprite.setPosition(250.0f,200.0f);
     // mCoinSprite.setOrigin(100.0f,50.0f);
 }
 
