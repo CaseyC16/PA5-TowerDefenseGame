@@ -65,8 +65,16 @@
     //Rules Title and Text for when Button is pressed
     sf::Text rulesTitle("RULES", font, 40);
     rulesTitle.setPosition(330, 20);
-    sf::Text rulesText("You Are A Squirrel.\n Fight Back Against the Humans trying to burn your forest!\n Use Acorns to Purchase Special Squirrels to attack the humans.\n ", font, 24);
-
+    string rulesTyped = "You Are A Squirrel.\n"
+    "Fight Back Against the Humans trying to burn your forest!\n"
+    "Earn Acorns by Slaying humans, and use them to\n" 
+    "Purchase Special Squirrels to attack the humans.\n" 
+    "Click the hire button for each squirrel you wish to purchase,\n"
+    "then click on the tree youd like to place it on.\n"
+    "Make sure you have enough funds!\n"
+    "The Humans Arrive in waves that get larger as time passes.\n"
+    "See how long you can last!";
+    sf::Text rulesText(rulesTyped, font, 24);
     //Center the text vertically
     sf::FloatRect textRect = rulesText.getLocalBounds();
     rulesText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
