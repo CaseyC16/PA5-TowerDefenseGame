@@ -8,7 +8,6 @@
  //COMPILE g++ -Wall main.cpp source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
  //On Mac: g++ -Wall -std=c++11 main.cpp source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
  #include <iostream>
- #include <vector>
  #include "include/button.h"
  #include "include/enemyclass.h"
  #include "include/enemymovement.h"
@@ -64,11 +63,29 @@
     Button backButton("Back", {50, 20}, {100, 40}, sf::Color::Red);
 
     // Data For Round, Currency, Enemies, and Towers
+    size_t frameCount = 0;
+    size_t spawnCount = 0;
+    sf::Clock enemySpawnTimer;
     std::vector<sf::Vector2f> waypoints;
-    waypoints.push_back(sf::Vector2f(52.5f, 20.0f));  // first
-    waypoints.push_back(sf::Vector2f(105.0f, 70.0f)); // second
-    waypoints.push_back(sf::Vector2f(128.0f, 110.0f)); // third
-    waypoints.push_back(sf::Vector2f(402.5f, 220.0f)); // final path
+    //first loop
+    waypoints.push_back(sf::Vector2f(160.0f, 0.0f));  // spawn
+    waypoints.push_back(sf::Vector2f(160.0f, 100.0f)); // upper 1
+    waypoints.push_back(sf::Vector2f(160.0f, 315.0f)); // lower 1
+    waypoints.push_back(sf::Vector2f(340.5f, 315.0f)); // lower 2
+    waypoints.push_back(sf::Vector2f(340.0f, 100.0f)); // upper 2
+    //second loop
+    waypoints.push_back(sf::Vector2f(160.0f, 100.0f)); // upper 1
+    waypoints.push_back(sf::Vector2f(160.0f, 315.0f)); // lower 1
+    waypoints.push_back(sf::Vector2f(340.0f, 315.0f)); // lower 2
+    waypoints.push_back(sf::Vector2f(670.0f, 315.0f)); // lower 3
+    waypoints.push_back(sf::Vector2f(670.0f, 100.0f)); // upper 3
+    waypoints.push_back(sf::Vector2f(340.0f, 100.0f)); // upper 2
+    waypoints.push_back(sf::Vector2f(160.0f, 100.0f)); // upper 1
+    //exit
+    waypoints.push_back(sf::Vector2f(160.0f, 315.0f)); // lower 1
+    waypoints.push_back(sf::Vector2f(340.5f, 315.0f)); // lower 2
+    waypoints.push_back(sf::Vector2f(670.0f, 315.0f)); // lower 3
+    waypoints.push_back(sf::Vector2f(670.0f, 400.0f)); // end
     static int currency = 100;  
     static int round = 1;
     bool roundInProgress = false;
@@ -193,7 +210,12 @@
                 //Detects When A Button on the Game Screen in Clicked
                 if (state == GAME_SCREEN) 
                 {
-                    
+                    if (event.type == sf::Event::MouseButtonPressed)
+                    {
+                        // Get mouse position relative to the window.
+                        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                        std::cout << "Mouse Clicked at: (" << mousePos.x << ", " << mousePos.y << ")" << std::endl;
+                    }
                     if(towerBtn1.getBounds().contains(mousePos)) // && currency >= 1 (check if player has enough money)
                     {
                         //Needs to Allow Player to Spawn and Place the Tower
@@ -223,13 +245,23 @@
                     {
                         roundInProgress = true;
                         //Spawns a specified number of enemies depending on the round number using a vector
-                        for (int i = 0; i < 10 + round * 2; ++i)
+                       
+                    }
+                    if(roundInProgress && static_cast<size_t>(10 + round * 2))
+                    {
+                        if(frameCount >= 30)
                         {
                             Enemy * e = new Enemy(peasant);
                             currentEnemies.push_back(e);
                             e->getSprite().setPosition(waypoints[0]);
                             e->setCurrentWaypoint(1); // Next waypoint is index 1.
                             currentEnemies.push_back(e);
+                            spawnCount++;
+                            frameCount = 0;
+                        }
+                        else
+                        {
+                            frameCount++;
                         }
                     }
                 }
