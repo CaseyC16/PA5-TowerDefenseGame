@@ -70,5 +70,6 @@
         "sstream": "cpp",
         "stack": "cpp",
         "variant": "cpp"
+        "chrono": "cpp"
     }
 }

@@ -17,19 +17,19 @@ void Enemy::setType(enemyType newType)
     if(mType == peasant)
     {
         setHealth(1);
-        setSpeed(1);
+        setSpeed(1.0f);
         setSprite("resources/enemy_farmer.png");
     }
     if(mType == knight)
     {
         setHealth(2);
-        setSpeed(2);
+        setSpeed(1.25f);
         setSprite("resources/enemy_armor.png");
     }
     if(mType == heavyKnight)
     {
         setHealth(3);
-        setSpeed(3);
+        setSpeed(1.5f);
         setSprite("resources/enemy_heavyarmor.png");
     }
 }
@@ -44,7 +44,7 @@ void Enemy::setHealth(int newhealth)
 }
 
 //sets speed for enemy
-void Enemy::setSpeed(int newspeed)
+void Enemy::setSpeed(float newspeed)
 {
     mSpeed = newspeed;
 }
@@ -57,6 +57,13 @@ void Enemy::setSprite(const std::string & sprite)
         exit(TEXTURE_LOADING_ERROR);
     }
     mSprite.setTexture(mTexture);
+
+    //resize the sprite
+    mSprite.setScale(0.3f, 0.3f);
+
+    //setting the origin of the sprite to be at the bottom middle of the image
+    sf::Vector2u textureSize = mTexture.getSize();
+    mSprite.setOrigin(textureSize.x / 3.5f, textureSize.y);
 }
 
 //draws the sprite

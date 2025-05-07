@@ -5,6 +5,8 @@
 
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <unistd.h>
 #include <SFML/Graphics.hpp>
 //make an enum for a debuff state and normal state
 //enum state {normal, debuff};
@@ -25,8 +27,8 @@ class Enemy
         void setHealth(int newhealth);
 
         //speed
-        int getSpeed(){return mSpeed;}
-        void setSpeed(int newspeed);
+        float getSpeed(){return mSpeed;}
+        void setSpeed(float newspeed);
 
         //change type of enemy
         enemyType getType() const {return mType;}
@@ -60,7 +62,7 @@ class Enemy
     private:
 
     int mHealth;
-    int mSpeed;
+    float mSpeed;
     int mCurrentWaypoint;
     sf::Sprite mSprite;
     sf::Texture mTexture;
