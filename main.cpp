@@ -159,8 +159,7 @@
     bool isPlacingTower2 = false;
     bool isPlacingTower3 = false;
     Tower *newTower = nullptr;
-    Coin pineCoin;
-    pineCoin.setSprite("resources/PineCoinForCSFinal.png"); // Thads coin sprite
+    std::vector<Coin> pineCoins;
 
     while(window.isOpen())
     {
@@ -270,7 +269,7 @@
                             isPlacingTower3 = false;
                         }
                     }
-
+                    std::cout<<"Current frame count is: "<<frameCount<<std::endl;
                     //Starts the Round as long as its not already started
                     if (roundStartButton.getBounds().contains(mousePos) && !roundInProgress)
                     {
@@ -280,7 +279,7 @@
                     }
                     if(roundInProgress && static_cast<size_t>(10 + round * 2))
                     {
-                        if(frameCount >= 30)
+                        if(frameCount >= 10)
                         {
                             Enemy * e = new Enemy(peasant);
                             game1.addEnemy(e);
@@ -327,12 +326,16 @@
         //Display Game Screen
         else if (state == GAME_SCREEN)
         {
+            sf::Vector2f coin1; // this is the coin for up in the left to show a coin for how many pinecoins we have -Thad
+            coin1.x=60;coin1.y=12;
+            Coin currencyIndicatorCoin(coin1);
+            
             window.clear();
 
             mapSprite.setScale(700.f / 2564.f, 400.f / 2152.f);
             window.draw(mapSprite);
 
-            currencyText.setString("PineCoins: " + std::to_string(currency));
+            currencyText.setString("Coins:   " + std::to_string(currency));
             roundText.setString("Round: " + std::to_string(round));
             window.draw(currencyText);
             window.draw(roundText);
@@ -342,15 +345,19 @@
             window.draw(towerBtn2);
             window.draw(towerBtn3);
             window.draw(roundStartButton);
+            currencyIndicatorCoin.drawSprite(window);
+            // sf::Vector2f coinPosition;
+            // coinPosition.x=100;coinPosition.y=185;
+            // Coin currencyCoin(coinPosition);
 
             //Assumes all enemies are dead unless the check below states otherwise
             bool allDead = true;
             //Iterates through every enemy spawned
-            sf::Vector2f coinPosition;
+            
             for (size_t i = 0; i < currentEnemies.size(); ++i)
             {
-                coinPosition = currentEnemies[i]->getSprite().getPosition(); // this will allow me to keep track of the enemies and where a coin should be if they die -Thad
-                //if enemy dies, pineCoin.drawSprite(window);
+                // coinPosition = currentEnemies[i]->getSprite().getPosition(); // this will allow me to keep track of the enemies and where a coin should be if they die -Thad
+                //if enemy dies, pineCoins.drawSprite(window);
                 
                 //if there is still an enemy in the vector
                 if (currentEnemies[i])

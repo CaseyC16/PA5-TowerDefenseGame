@@ -3,28 +3,19 @@
 #include <SFML/Graphics.hpp>
 #include "enemyclass.h"
 
-class Coin: public Enemy{
+class Coin:public sf::Transformable{
 
 public:
-    Coin(){};
-    
-    // sf::Sprite & getSprite() {return mSprite;}
-    // void setSprite(const std::string & sprite);
-    // void drawSprite(sf::RenderWindow & window);
-
-    // int getCurrentWaypoint() const { return mCurrentWaypoint; }
-    // void setCurrentWaypoint(int waypoint);
-    // void updateMovement(const std::vector<sf::Vector2f>& waypoints);
+    Coin();
+    Coin(sf::Vector2f &pos);
+    void drawSprite(sf::RenderWindow & window);
 
    //destructor
     ~Coin(){}; //every time an enemy is destroyed make player earn currency
 
 private:
-
-    // int mCurrentWaypoint;
-    // sf::Sprite mSprite;
-    // sf::Texture mTexture;
-    // enemyType mType;
+    sf::Sprite mCoinSprite;
+    sf::Texture mCoinTexture;
 };
 
 #endif
