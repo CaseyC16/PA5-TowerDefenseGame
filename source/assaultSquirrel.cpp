@@ -11,7 +11,7 @@
 AssaultSquirrel::AssaultSquirrel(sf::Vector2f position)
 {
     //load texture
-    if(!mTexture.loadFromFile("resources/assaultSquirrel.png"))
+    if(!mTexture.loadFromFile("resources/machineGunSquirrelFinalProject2025(rightFace).png"))
     {
         std::cout<<"Error opening file\n";
         exit(1);

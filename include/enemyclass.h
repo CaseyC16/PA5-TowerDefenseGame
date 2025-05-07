@@ -24,7 +24,7 @@ class Enemy
     public:
     //constructor for class to set default health and speed
     Enemy(enemyType type);
-
+    Enemy(){};
     //getter and setter functions
         //health
         int getHealth(){return mHealth;}
@@ -55,7 +55,7 @@ class Enemy
     //destructor
     ~Enemy();
 
-    private:
+    protected:
 
     int mHealth;
     float mSpeed;

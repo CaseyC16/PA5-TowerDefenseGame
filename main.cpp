@@ -4,7 +4,7 @@
  * @brief Balloon Tower Defense Game
  * @date 2025-04-09
  */
-
+ 
  //COMPILE g++ -Wall main.cpp source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
  //On Mac: g++ -Wall -std=c++11 main.cpp source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
  #include <iostream>
@@ -13,7 +13,9 @@
  #include "include/coneThrower.h"
  #include "include/archerSquirrel.h"
  #include "include/assaultSquirrel.h"
- #include "include/game.h"
+ #include "include/coinSpawn.h" // For Thad to have a coin in game
+ #include "include/game.h" 
+
  
  using std::cout;
  using std::endl;
@@ -102,6 +104,10 @@
     int currency = 100;  
     int round = 1;
     bool roundInProgress = false;
+    int frameCount=0;
+    //moved to Game class
+    std::vector<Enemy*> currentEnemies;
+    // std::vector<Tower*> placedTowers;
     Game game1;
 
     //Text for Displaying Currency
@@ -160,6 +166,10 @@
     bool isPlacingTower2 = false;
     bool isPlacingTower3 = false;
     Tower *newTower = nullptr;
+    std::vector<Coin> pineCoins;
+    sf::Vector2f coinPos;
+    Coin coinForKill;
+    bool enemyKill=false;
 
     // Variables for enemy spawning
     size_t maxEnemiesThisRound = 0;
@@ -242,7 +252,8 @@
                     }
                 }
                 
-                // Detects When A Button on the Game Screen is Clicked
+                //Detects When A Button on the Game Screen in Clicked
+
                 if (state == GAME_SCREEN) 
                 {
                     if (event.type == sf::Event::MouseButtonPressed)
@@ -296,7 +307,7 @@
                             isPlacingTower3 = false;
                         }
                     }
-
+                    std::cout<<"Current frame count is: "<<frameCount<<std::endl;
                     //Starts the Round as long as its not already started
                     if (roundStartButton.getBounds().contains(mousePos) && !roundInProgress)
                     {
@@ -313,6 +324,7 @@
                             e->getSprite().setPosition(waypoints[0]);
                             e->setCurrentWaypoint(1); // Next waypoint is index 1.
                             game1.addEnemy(e);
+                            currentEnemies.push_back(e);
                             // game1.addEnemy(e);
                             spawnCount++;
                             frameCount = 0;
@@ -323,7 +335,8 @@
                         }
                         //Spawns a specified number of enemies depending on the round number
                         maxEnemiesThisRound = 10 + round * 2;
-                        spawnCount = 0;
+
+
                     }
                 }
             }
@@ -356,13 +369,17 @@
         }
         //Display Game Screen
         else if (state == GAME_SCREEN)
-        { 
+        {
+            sf::Vector2f coin1; // this is the coin for up in the left to show a coin for how many pinecoins we have -Thad
+            coin1.x=60;coin1.y=12;
+            Coin currencyIndicatorCoin(coin1);
+
             window.clear();
 
             mapSprite.setScale(700.f / 2564.f, 400.f / 2152.f);
             window.draw(mapSprite);
 
-            currencyText.setString("Acorns: " + std::to_string(currency));
+            currencyText.setString("Coins:   " + std::to_string(currency));
             roundText.setString("Round: " + std::to_string(round));
             window.draw(currencyText);
             window.draw(roundText);
@@ -372,6 +389,7 @@
             window.draw(towerBtn2);
             window.draw(towerBtn3);
             window.draw(roundStartButton);
+            currencyIndicatorCoin.drawSprite(window);
 
             // Enemy spawning logic
             if (roundInProgress && spawnCount < maxEnemiesThisRound)
@@ -422,9 +440,16 @@
             bool enemyReachedEnd = false;
             
             //Iterates through every enemy spawned
+            
+            // for (size_t i = 0; i < currentEnemies.size(); ++i)
+
             std::vector<Enemy*> currentEnemies = game1.getEnemies();
             for (int i = 0; i < game1.getNumOfEnemies(); ++i)
+
             {
+                // coinPosition = currentEnemies[i]->getSprite().getPosition(); // this will allow me to keep track of the enemies and where a coin should be if they die -Thad
+                //if enemy dies, pineCoins.drawSprite(window);
+                
                 //if there is still an enemy in the vector
                 if (currentEnemies[i])
                 {
@@ -453,17 +478,47 @@
                             break;
                         }
                     }
+                    else{
+                        currency+=2;
+                        coinPos=(currentEnemies[i]->getSprite()).getPosition();
+                        coinPos.y+=50;
+                        coinForKill.setPosition(coinPos);
+                        enemyKill=true;
+                        delete currentEnemies[i];
+                        currentEnemies[i] = nullptr;
+                    }
                 }
+                if (frameCount>10&&frameCount<15){ //just to test killing them to spawn my coins in -Thad
+                    currentEnemies[i]->setHealth(0);
+                    frameCount=16;
+                }////////////////////////////////////////////////////////
             }
+            
+            static int coinflip=0; //need to make this transition slower, probably with a count so that it isnt too fast
+            if (enemyKill&&coinflip%10==0){
+                coinForKill.setRotation(0);
+            }else if(enemyKill&&coinflip%5==0){
+                coinForKill.setRotation(180);
+            }
+            if (enemyKill)
+                coinForKill.drawSprite(window);
+            coinflip++;
+            if(coinflip>20)
+                enemyKill=false;
+            //coinForKill.drawSprite(window); // should be printing above not here -Thad
+
 
             // Update the game's enemies vector with any changes
             game1.updateEnemies(currentEnemies);
 
             //draw any placed towers
+
             for (int i = 0; i < game1.getNumOfTowers(); i++)
+
             {
                 (game1.getTowers())[i]->draw(window);
             }
+            
 
             //Ends the round and moves it forward after all enemies are defeated
             if (roundInProgress && allDead && spawnCount >= maxEnemiesThisRound && !enemyReachedEnd)
@@ -478,7 +533,6 @@
                 // Clear enemies for the next round
                 game1.clearEnemies();
             }
-
             window.display();
         }
         //Draws the Game over SCreen
