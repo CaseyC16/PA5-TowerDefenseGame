@@ -13,12 +13,13 @@ public:
     PineCone() {} //default constructor
     PineCone(sf::Vector2f startPos, Enemy *target);
     void update(float deltaTime);  // Move toward target
-    bool hasHitTarget() const;
+    bool hasHitTarget(Enemy *target) const;
     bool outOfRange(const sf::FloatRect& bounds) const;
     sf::Sprite& getSprite() {return mSprite;}
+    void setPosition(const sf::Vector2f& pos) { mPosition = pos; mSprite.setPosition(pos); }
 private:
-    sf::Sprite mSprite;
-    sf::Texture mTexture;
+    sf::Sprite mSprite {};
+    sf::Texture mTexture {};
     sf::Vector2f mPosition {0.f,0.f};
     sf::Vector2f mVelocity {0.f,0.f};
     float mSpeed {0.f};

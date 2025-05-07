@@ -13,28 +13,31 @@
 #include <iostream>
 #include <vector>
 #include "enemyclass.h"
+#include "pinecone.h"
 
 class Tower; //forward declaration for Tower class
 
 class Game
 {
 public:
-    /* iterate through towers - if an enemy is in tower range, then add it to tower's enemy vector
-    */
     void checkTowerRanges();
     std::vector<Enemy*> getEnemies() const {return currentEnemies;};
     std::vector<Tower*> getTowers() const {return placedTowers;}
+    std::vector<PineCone*> getBullets() const {return currentBullets;}
     int getNumOfEnemies() const {return currentEnemies.size();}
     int getNumOfTowers() const {return placedTowers.size();}
     void addEnemy(Enemy* newEnemy) {currentEnemies.push_back(newEnemy);}
+    void addBullet(PineCone *newBullet) {currentBullets.push_back(newBullet);}
     void clearEnemies();
     void clearTowers();
+    void clearBullets();
     void addTower(Tower* newTower) {placedTowers.push_back(newTower);}
-    void removeTower(Tower* deadTower);
     void updateEnemies(const std::vector<Enemy*>& updatedEnemies) {currentEnemies = updatedEnemies;}
+    void updateBullets(const std::vector<PineCone*>& updatedBullets) {currentBullets = updatedBullets;}
 private:
     std::vector<Enemy*> currentEnemies;
     std::vector<Tower*> placedTowers;
+    std::vector<PineCone*> currentBullets;
 };
 
 #endif

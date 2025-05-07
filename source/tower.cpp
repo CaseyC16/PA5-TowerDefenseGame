@@ -72,10 +72,31 @@ void Tower::removeTarget(Enemy e)
 void Tower::draw(sf::RenderWindow &window)
 {
     window.draw(mSprite);
+
+    //draw range radius as transparent circle
+    if (mRadius > 0)
+    {
+        sf::CircleShape rangeCircle(mRadius);
+        rangeCircle.setOrigin(sf::Vector2f(mRadius, mRadius));
+        rangeCircle.setPosition(mPos);
+        rangeCircle.setFillColor(sf::Color(0, 255, 0, 20)); // Transparent green
+        rangeCircle.setOutlineColor(sf::Color(0, 255, 0, 40)); // Slightly less transparent green
+        rangeCircle.setOutlineThickness(2);
+        window.draw(rangeCircle);
+    }
 }
 
-void Tower::shoot(Enemy *target)
+void Tower::shoot(Enemy *target, std::vector<PineCone*> &gameBullets)
 {
-    //make Bullet object and add to Bullet vector
-    PineCone *newBullet = new PineCone(this->getPosition(), target);
+    //check if target exists
+    if (!target) return;
+
+    //make pinecone object and add to Bullet vector
+    sf::Vector2f startPos = this->getPosition();
+    PineCone *newBullet = new PineCone(startPos, target);
+    mBullets.push_back(newBullet);
+    gameBullets.push_back(newBullet);
+
+    //point bullet at enemy
+
 }

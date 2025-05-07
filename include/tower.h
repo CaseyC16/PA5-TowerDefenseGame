@@ -25,7 +25,7 @@ public:
     sf::Sprite getSprite() const {return mSprite;}
     float getRadius() const {return mRadius;}
     virtual bool placeTower(Tower *tower, sf::Vector2f position, Game &currentGame, int &currency, sf::FloatRect mapBounds) = 0;
-    void shoot(Enemy *target);
+    void shoot(Enemy *target, std::vector<PineCone*> &gameBullets);
     bool checkBounds(sf::Vector2f position, sf::FloatRect mapBounds, std::vector<Tower*> placedTowers);
     virtual ~Tower() = default;
     void addTarget(Enemy *e); //gets called in main every time an enemy enters the radius
