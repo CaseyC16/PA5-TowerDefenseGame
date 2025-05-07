@@ -15,6 +15,7 @@
  #include "include/coneThrower.h"
  #include "include/archerSquirrel.h"
  #include "include/assaultSquirrel.h"
+ #include "include/coinSpawn.h" // For Thad to have a coin in game
  
  using std::cout;
  using std::endl;
@@ -133,6 +134,8 @@
     bool isPlacingTower2 = false;
     bool isPlacingTower3 = false;
     Tower *newTower = nullptr;
+    Coin pineCoin;
+    pineCoin.setSprite("resources/pineCoinForCSFinal.png"); // Thads coin sprite
 
     while(window.isOpen())
     {
