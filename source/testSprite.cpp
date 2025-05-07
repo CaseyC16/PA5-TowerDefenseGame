@@ -1,3 +1,10 @@
+/**
+ * @file testSprite.cpp
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Implimentation File for testSprite.h
+ * @date 2025-04-09
+ */
+
 #include "../include/testSprite.h"
 
 //Constructor that sets sprite position to the position,  sprite size to size (given in pixels), and sprite color to color

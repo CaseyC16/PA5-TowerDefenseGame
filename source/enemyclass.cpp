@@ -1,15 +1,29 @@
+/**
+ * @file enemyClass.cpp
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Implimentation File for enemyClass.h
+ * @date 2025-04-09
+ */
+
 #include "../include/enemyclass.h"
 #include <iostream>
 
-//when you want to create a new enemy use code below
-//Enemy * enemy = new Enemy(peasant or knight or heavyKnight);
+/**
+ * @brief Constructor for Enemy object
+ * 
+ * @param type type is an enum that is used to decide what Enemy is spawned
+ */
 
 Enemy::Enemy(enemyType type) : mType(type)
 {
     setType(type);
 }
 
-//sets the type of enemy based on what enum is passed to it
+/**
+ * @brief this function sets all the stats to what they need to be based on the enum
+ * 
+ * @param newType type is an enum that is used to decide what enemy is spawned
+ */
 void Enemy::setType(enemyType newType)
 {
     mType = newType;
@@ -34,7 +48,11 @@ void Enemy::setType(enemyType newType)
     }
 }
 
-//sets health for enemy
+/**
+ * @brief sets health for Enemy
+ * 
+ * @param newhealth sent in from the setType function
+ */
 void Enemy::setHealth(int newhealth)
 {
     if(newhealth >= 0)
@@ -43,13 +61,21 @@ void Enemy::setHealth(int newhealth)
     }
 }
 
-//sets speed for enemy
+/**
+ * @brief sets speed for Enemy
+ * 
+ * @param newspeed sent in from the setType function
+ */
 void Enemy::setSpeed(float newspeed)
 {
     mSpeed = newspeed;
 }
 
-//sets the sprite
+/**
+ * @brief sets the sprite
+ * 
+ * @param sprite sent in from the setType function
+ */
 void Enemy::setSprite(const std::string & sprite)
 {
     if (!mTexture.loadFromFile(sprite))
@@ -66,13 +92,22 @@ void Enemy::setSprite(const std::string & sprite)
     mSprite.setOrigin(textureSize.x / 3.5f, textureSize.y);
 }
 
-//draws the sprite
+/**
+ * @brief draws the sprite
+ * 
+ * @param window is the window of the game
+ */
 void Enemy::drawSprite(sf::RenderWindow & window)
 {
     window.draw(mSprite);
 }
 
-//when an enemy is hit with an attack delete the instance of the enemy and make and enemy with a lower class
+/**
+ * @brief when an Enemy is hit with an attack either
+ *        take a health away and degrade the enemy,
+ *        or 
+ *        delete the instance of the enemy when it reaches 0
+ */
 void Enemy::targeted() 
 {
     // reduce health
@@ -93,62 +128,62 @@ void Enemy::targeted()
     }
 }
 
+/**
+ * @brief sets the waypoint
+ * 
+ * @param waypoint called from main
+ */
 void Enemy::setCurrentWaypoint(int waypoint)
 {
     mCurrentWaypoint = waypoint;
 }
 
-void Enemy::updateMovement(const std::vector<sf::Vector2f>& waypoints)
+/**
+ * @brief updates the movement of the Enemy when it reaches the next waypoint
+ * 
+ * @param waypoints uses the next waypoint to determine if it is close enough or not
+ * @param deltaTime is used to scale the speed of the Enemy
+ */
+void Enemy::updateMovement(const std::vector<sf::Vector2f>& waypoints, float deltaTime)
 {
-    if ( mCurrentWaypoint < static_cast<int>(waypoints.size()))
+    //if the current waypoint is not the end waypoint
+    if (mCurrentWaypoint < static_cast<int>(waypoints.size()))
     {
+        // setting the base movement speed of the Enemy
+        float baseSpeed = 60.0f;
+
+        //calculate the distance between the position of the sprite and the next waypoint
         sf::Vector2f target = waypoints[mCurrentWaypoint];
         sf::Vector2f currentPos = mSprite.getPosition();
         sf::Vector2f direction = target - currentPos;
         float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+        
+        //calculates the total movement speed of the Enemy based on their base speed, the enemyType speed and the last rendered frame
+        //deltatime makes the speed reliant on real time instead of dependent on machine time, makes the speed constant on all computers
+        float movement = baseSpeed * getSpeed() * deltaTime;
 
-        // how far an enemy can move per step
-        float movement = static_cast<float>(getSpeed());
-
-        // if the enemy is not close enough to the waypoint
+        // if the distance left to the next waypoint is greater that the movement of the Enemy
         if (distance > movement) 
         {
-            // look for direction to head towards
+            // normalize the direction so that movement is fluid and then move the sprite
             direction /= distance; 
             mSprite.move(direction * movement);
         }
-        // if the enemy is close enough to the waypoint move on to the next waypoint
+        // means that the Enemy is close enough to the waypoint to start to head to the next waypoint
         else 
         {   
-            direction /= distance; 
-            mSprite.move(direction * movement);
-
-            //make sure that enemy doesnt pass the waypoint after it moves
+            // sets the position of the Enemy on the target, and tells the enemy that its time to move onto the next waypoint
             mSprite.setPosition(target);
             mCurrentWaypoint++;
         }
     }
-    else
-    {
-
-    }
 }
 
-// void Enemy::EnemyMovementPath()
-// {
-//         // waypoints for the enemies to traverse
-//         waypoints.push_back(sf::Vector2f(52.5f, 20.0f));  // first
-//         waypoints.push_back(sf::Vector2f(105.0f, 70.0f)); // second
-//         waypoints.push_back(sf::Vector2f(128.0f, 110.0f)); // third
-//         waypoints.push_back(sf::Vector2f(402.5f, 220.0f)); // final path
-
-//         //spawning position
-//         startPos = waypoints.front();
-// }
-
+/**
+ * @brief destroy the Enemy object
+ * 
+ */
 Enemy::~Enemy()
 {
-    //rewarded with nuts when enemy is defeated
-    // amount TBD
-    //nuts++
+
 }

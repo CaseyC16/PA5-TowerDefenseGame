@@ -1,3 +1,10 @@
+/**
+ * @file archerSquirrel.h
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Header File to Manage the archerSquirrel Tower
+ * @date 2025-04-09
+ */
+
 #ifndef ARCHERSQUIRREL_H
 #define ARCHERSQUIRREL_H
 
