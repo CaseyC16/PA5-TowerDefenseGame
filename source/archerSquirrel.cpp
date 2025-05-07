@@ -8,6 +8,11 @@
 #include "../include/archerSquirrel.h"
 #include "../include/game.h"
 
+/**
+ * @brief Construct a new Archer Squirrel:: Archer Squirrel object
+ * 
+ * @param position 
+ */
 ArcherSquirrel::ArcherSquirrel(sf::Vector2f position)
 {
     //load texture
@@ -33,6 +38,11 @@ ArcherSquirrel::ArcherSquirrel(sf::Vector2f position)
     mCost = 80;
 }
 
+/**
+ * @brief attacks an enemy
+ * 
+ * @param q 
+ */
 void ArcherSquirrel::attack(std::queue<Enemy> &q)
 {
     //take one hp from all enemies
@@ -45,6 +55,17 @@ void ArcherSquirrel::attack(std::queue<Enemy> &q)
     }
 }
 
+/**
+ * @brief places tower
+ * 
+ * @param tower 
+ * @param position 
+ * @param currentGame 
+ * @param currency 
+ * @param mapBounds 
+ * @return true 
+ * @return false 
+ */
 bool ArcherSquirrel::placeTower(Tower *tower, sf::Vector2f position, Game &currentGame, int &currency, sf::FloatRect mapBounds)
 {
     //Check if position is on the map

@@ -36,6 +36,7 @@
 
     //Clock for Calculating Deltatime for consistant speed/fps
     sf::Clock frameClock;
+    sf::Clock effectsTimer; //timer for visual animations
     float deltaTime = 0.0f;
 
     //Create Font and check if it loads properly
@@ -112,10 +113,7 @@
     int currency = 100;  
     int round = 1;
     bool roundInProgress = false;
-    int frameCount=0;
-    //moved to Game class
-    std::vector<Enemy*> currentEnemies;
-    // std::vector<Tower*> placedTowers;
+    int frameCount = 0;
     Game game1;
 
     //Text for Displaying Currency
@@ -261,7 +259,6 @@
                 }
                 
                 //Detects When A Button on the Game Screen in Clicked
-
                 if (state == GAME_SCREEN) 
                 {
                     if (event.type == sf::Event::MouseButtonPressed)
@@ -332,7 +329,7 @@
                             e->getSprite().setPosition(waypoints[0]);
                             e->setCurrentWaypoint(1); // Next waypoint is index 1.
                             game1.addEnemy(e);
-                            currentEnemies.push_back(e);
+                            //currentEnemies.push_back(e);
                             // game1.addEnemy(e);
                             spawnCount++;
                             frameCount = 0;
@@ -346,10 +343,85 @@
 
 
                     }
+
+                    //check for tower/enemy overlap
+                    game1.checkTowerRanges();
+                    //check for enemy/bullet overlap
+
                 }
             }
         }
         
+        //track bullets as they are released
+        std::vector<PineCone*> currentBullets = game1.getBullets();
+        std::vector<PineCone*> activeBullets;
+
+        //define bounds to check if bullets leave map
+        sf::FloatRect playArea(0, 0, 700, 400);
+
+        for (auto* bullet : currentBullets) 
+        {
+            if (bullet == nullptr)
+            {
+                continue;
+            }
+
+            bool bulletActive = true;
+            
+            //update bullet position
+            bullet->update(deltaTime);
+            
+            //draw bullet
+            window.draw(bullet->getSprite());
+            
+            //check for enemy hits
+            for (int i = 0; i < game1.getNumOfEnemies() && bulletActive; i++) 
+            {
+                Enemy* enemy = game1.getEnemies()[i];
+                if(enemy && bullet->hasHitTarget(enemy))
+                {
+                    //hit an enemy
+                    enemy->setHealth(enemy->getHealth() - 1);
+                    
+                    //enemy died
+                    if(enemy->getHealth() <= 0)
+                    {
+                        //spawn coin
+                        coinPos = enemy->getSprite().getPosition();
+                        coinPos.y += 10; // Slight offset for visual effect
+                        coinForKill.setPosition(coinPos);
+                        enemyKill = true;
+                        
+                        //add currency
+                        currency += 5;
+                        
+                        //remove enemy
+                        delete enemy;
+                        game1.getEnemies()[i] = nullptr;
+                    }
+                    
+                    //remove bullet
+                    delete bullet;
+                    bulletActive = false;
+                }
+            }
+
+            //check if bullet is out of range
+            if(bulletActive && bullet->outOfRange(playArea))
+            {
+                delete bullet;
+                bulletActive = false;
+            }
+            
+            //track active bullets
+            if(bulletActive)
+            {
+                activeBullets.push_back(bullet);
+            }
+        }
+
+        //update active bullets
+        game1.updateBullets(activeBullets);
 
         //Display Title Screen
         if (state == TITLE_SCREEN)
@@ -543,13 +615,18 @@
             game1.updateEnemies(currentEnemies);
 
             //draw any placed towers
-
             for (int i = 0; i < game1.getNumOfTowers(); i++)
 
             {
                 (game1.getTowers())[i]->draw(window);
             }
-            
+
+            //draw projectiles
+            for(auto* p : game1.getBullets())
+            {
+                p->update(deltaTime);
+                window.draw(p->getSprite());
+            }
 
             //Ends the round and moves it forward after all enemies are defeated
             if (roundInProgress && allDead && spawnCount >= maxEnemiesThisRound && !enemyReachedEnd)
@@ -563,6 +640,9 @@
 
                 // Clear enemies for the next round
                 game1.clearEnemies();
+
+                //remove any active bullets
+                game1.clearBullets();
             }
             window.display();
         }
