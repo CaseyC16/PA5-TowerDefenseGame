@@ -15,12 +15,9 @@
 #include <vector>
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
-//make an enum for a debuff state and normal state
-//enum state {normal, debuff};
-//make an enum for if the enemy got killed by a tower 
-//make an enum for enemy types
-enum enemyType {peasant, knight, heavyKnight};
 
+//enum for enemy types
+enum enemyType {peasant, knight, heavyKnight};
 
 class Enemy
 {
@@ -46,9 +43,6 @@ class Enemy
         void setSprite(const std::string & sprite);
         void drawSprite(sf::RenderWindow & window);
 
-        //enemy waypoints
-        //int getCurrentWaypoint() const { return mCurrentWaypoint; }
-        //void setCurrentWaypoint(int index) { mCurrentWaypoint = index; }
 
     //towers target enemies
     void targeted();
@@ -57,14 +51,9 @@ class Enemy
     size_t getCurrentWaypoint() const { return mCurrentWaypoint; }
     void setCurrentWaypoint(int waypoint);
     void updateMovement(const std::vector<sf::Vector2f>& waypoints, float deltaTime);
-    //static void EnemyMovementPath();
-    
-    //define vectors for waypoints
-    //static std::vector<sf::Vector2f> waypoints;
-    //static sf::Vector2f startPos;
 
     //destructor
-    ~Enemy(); //every time an enemy is destroyed make player earn currency
+    ~Enemy();
 
     private:
 
