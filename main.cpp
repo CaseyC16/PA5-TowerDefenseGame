@@ -8,7 +8,6 @@
  //COMPILE g++ -Wall main.cpp source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
  //On Mac: g++ -Wall -std=c++11 main.cpp source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
  #include <iostream>
- #include <vector>
  #include "include/button.h"
  #include "include/enemyclass.h"
  #include "include/enemymovement.h"
@@ -16,6 +15,8 @@
  #include "include/archerSquirrel.h"
  #include "include/assaultSquirrel.h"
  #include "include/coinSpawn.h" // For Thad to have a coin in game
+ #include "include/game.h" 
+
  
  using std::cout;
  using std::endl;
@@ -65,17 +66,41 @@
     Button backButton("Back", {50, 20}, {100, 40}, sf::Color::Red);
 
     // Data For Round, Currency, Enemies, and Towers
+    size_t frameCount = 0;
+    size_t spawnCount = 0;
+    sf::Clock enemySpawnTimer;
     std::vector<sf::Vector2f> waypoints;
     waypoints.push_back(sf::Vector2f(52.5f, 20.0f));  // first
     waypoints.push_back(sf::Vector2f(105.0f, 70.0f)); // second
     waypoints.push_back(sf::Vector2f(128.0f, 110.0f)); // third
     waypoints.push_back(sf::Vector2f(402.5f, 220.0f)); // final path
     static int currency = 100;  
+    //first loop
+    waypoints.push_back(sf::Vector2f(160.0f, 0.0f));  // spawn
+    waypoints.push_back(sf::Vector2f(160.0f, 100.0f)); // upper 1
+    waypoints.push_back(sf::Vector2f(160.0f, 315.0f)); // lower 1
+    waypoints.push_back(sf::Vector2f(340.5f, 315.0f)); // lower 2
+    waypoints.push_back(sf::Vector2f(340.0f, 100.0f)); // upper 2
+    //second loop
+    waypoints.push_back(sf::Vector2f(160.0f, 100.0f)); // upper 1
+    waypoints.push_back(sf::Vector2f(160.0f, 315.0f)); // lower 1
+    waypoints.push_back(sf::Vector2f(340.0f, 315.0f)); // lower 2
+    waypoints.push_back(sf::Vector2f(670.0f, 315.0f)); // lower 3
+    waypoints.push_back(sf::Vector2f(670.0f, 100.0f)); // upper 3
+    waypoints.push_back(sf::Vector2f(340.0f, 100.0f)); // upper 2
+    waypoints.push_back(sf::Vector2f(160.0f, 100.0f)); // upper 1
+    //exit
+    waypoints.push_back(sf::Vector2f(160.0f, 315.0f)); // lower 1
+    waypoints.push_back(sf::Vector2f(340.5f, 315.0f)); // lower 2
+    waypoints.push_back(sf::Vector2f(670.0f, 315.0f)); // lower 3
+    waypoints.push_back(sf::Vector2f(670.0f, 400.0f)); // end  
 
     static int round = 1;
     bool roundInProgress = false;
+    //moved to Game class
     std::vector<Enemy*> currentEnemies;
-    std::vector<Tower*> placedTowers;
+    // std::vector<Tower*> placedTowers;
+    Game game1;
 
     //Text for Displaying Currency
     sf::Text currencyText("Acorns: " + std::to_string(currency), font, 20);
@@ -190,20 +215,25 @@
                         round = 1;
                         currency = 100;
                         state = GAME_SCREEN;
-                        currentEnemies.clear();
+                        game1.clearEnemies();
                     }
                     //Brings the player back to the menu
                     else if (menuButton.getBounds().contains(mousePos))
                     {
                         state = TITLE_SCREEN;
-                        currentEnemies.clear();
+                        game1.clearEnemies();
                     }
                 }
                 
                 //Detects When A Button on the Game Screen in Clicked
                 if (state == GAME_SCREEN) 
                 {
-                    
+                    if (event.type == sf::Event::MouseButtonPressed)
+                    {
+                        // Get mouse position relative to the window.
+                        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                        std::cout << "Mouse Clicked at: (" << mousePos.x << ", " << mousePos.y << ")" << std::endl;
+                    }
                     if(towerBtn1.getBounds().contains(mousePos) && currency >= 50)
                     {
                         isPlacingTower1 = true;
@@ -211,7 +241,7 @@
                     else if(isPlacingTower1)
                     {
                         newTower = new ConeThrower(sf::Vector2f(mousePos));
-                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,670.f,370.f)))
+                        if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
                         {
                             isPlacingTower1 = false;
                         }
@@ -223,7 +253,7 @@
                     else if(isPlacingTower2)
                     {
                         newTower = new ArcherSquirrel(sf::Vector2f(mousePos));
-                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,670.f,370.f)))
+                        if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
                         {
                             isPlacingTower2 = false;
                         }
@@ -235,7 +265,7 @@
                     else if(isPlacingTower3)
                     {
                         newTower = new AssaultSquirrel(sf::Vector2f(mousePos));
-                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,670.f,370.f)))
+                        if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
                         {
                             isPlacingTower3 = false;
                         }
@@ -246,13 +276,24 @@
                     {
                         roundInProgress = true;
                         //Spawns a specified number of enemies depending on the round number using a vector
-                        for (int i = 0; i < 10 + round * 2; ++i)
+                       
+                    }
+                    if(roundInProgress && static_cast<size_t>(10 + round * 2))
+                    {
+                        if(frameCount >= 30)
                         {
                             Enemy * e = new Enemy(peasant);
-                            currentEnemies.push_back(e);
+                            game1.addEnemy(e);
                             e->getSprite().setPosition(waypoints[0]);
                             e->setCurrentWaypoint(1); // Next waypoint is index 1.
+                            game1.addEnemy(e);
                             currentEnemies.push_back(e);
+                            spawnCount++;
+                            frameCount = 0;
+                        }
+                        else
+                        {
+                            frameCount++;
                         }
                     }
                 }
@@ -305,7 +346,7 @@
             //Assumes all enemies are dead unless the check below states otherwise
             bool allDead = true;
             //Iterates through every enemy spawned
-            sf::Vector2f coinPosition;  // I want a variable to save a position to so i can print a coin over their head.
+            sf::Vector2f coinPosition;
             for (size_t i = 0; i < currentEnemies.size(); ++i)
             {
                 coinPosition = currentEnemies[i]->getSprite().getPosition(); // this will allow me to keep track of the enemies and where a coin should be if they die -Thad
@@ -326,9 +367,9 @@
             }
 
             //draw any placed towers
-            for (size_t i = 0; i < placedTowers.size(); i++)
+            for (int i = 0; i < game1.getNumOfTowers(); i++) //should be an int, not a size_t, checking for how many towers there are
             {
-                placedTowers[i]->draw(window);
+                (game1.getTowers())[i]->draw(window);
             }
 
             //Ends the round and moves it forward after all enemies are defeated
@@ -342,8 +383,8 @@
                {
                    delete currentEnemies[i];
                }
-
-                currentEnemies.clear();
+               //clear enemy vector
+               game1.clearEnemies();
             }
 
             window.display();

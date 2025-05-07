@@ -7,16 +7,19 @@
 #include <queue>
 #include "enemyclass.h"
 
+class Game; //forward declaration for Game class
+
 class Tower
 {
 public:
     void setPosition(sf::Vector2f position) {mPos = position;}
     sf::Vector2f getPosition() const {return mPos;}
     sf::Sprite getSprite() const {return mSprite;}
-    virtual bool placeTower(Tower *tower, sf::Vector2f position, std::vector<Tower*> &placedTowers, int &currency, sf::FloatRect mapBounds) = 0;
-    bool checkPath(sf::Vector2f position, sf::FloatRect mapBounds, std::vector<Tower*> placedTowers);
+    float getRadius() const {return mRadius;}
+    virtual bool placeTower(Tower *tower, sf::Vector2f position, Game &currentGame, int &currency, sf::FloatRect mapBounds) = 0;
+    bool checkBounds(sf::Vector2f position, sf::FloatRect mapBounds, std::vector<Tower*> placedTowers);
     virtual ~Tower() = default;
-    void addTarget(Enemy e); //gets called in main every time an enemy enters the radius
+    void addTarget(Enemy *e); //gets called in main every time an enemy enters the radius
     void removeTarget(Enemy e); //gets called in main every time an enemy leaves the radius
     virtual void attack(std::queue<Enemy> &q) = 0;      //pure virtual function that accepts an Enemy object by reference
                                               //and decrements its health according to the implementation of the 
@@ -33,7 +36,7 @@ protected:
     int mFireRate {0}; //sleep time between attacks
     int mCost {0};  
     //int mDamage {0}; 
-    std::queue<Enemy> mTargets;
+    std::vector<Enemy*> mTargets;
 };
 
 #endif
