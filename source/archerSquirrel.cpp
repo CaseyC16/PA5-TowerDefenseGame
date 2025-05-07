@@ -11,14 +11,14 @@
 ArcherSquirrel::ArcherSquirrel(sf::Vector2f position)
 {
     //load texture
-    if(!mTexture.loadFromFile("resources/archerSquirrel.png"))
+    if(!mTexture.loadFromFile("resources/bowSquirrelFinalProject2025(RightFace).png"))
     {
         std::cout<<"Error opening file\n";
         exit(1);
     }
     mSprite.setTexture(mTexture);
     sf::Vector2u textureSize = mTexture.getSize();
-    float scaleX = 60.0f / textureSize.x;
+    float scaleX =  60.0f / textureSize.x;
     float scaleY = 60.0f / textureSize.y;
     mSprite.setScale(sf::Vector2f(scaleX, scaleY));
 
