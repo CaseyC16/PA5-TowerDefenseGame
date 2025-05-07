@@ -1,3 +1,10 @@
+/**
+ * @file game.h
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Used to Manage Game Elements such as tower functionality and enemy manipulation
+ * @date 2025-04-09
+ */
+
 #ifndef GAME_H
 #define GAME_H
 
@@ -24,6 +31,7 @@ public:
     void clearTowers();
     void addTower(Tower* newTower) {placedTowers.push_back(newTower);}
     void removeTower(Tower* deadTower);
+    void updateEnemies(const std::vector<Enemy*>& updatedEnemies) {currentEnemies = updatedEnemies;}
 private:
     std::vector<Enemy*> currentEnemies;
     std::vector<Tower*> placedTowers;

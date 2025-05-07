@@ -1,3 +1,10 @@
+/**
+ * @file testSprite.h
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Used to Manage the Sprites that Appear On Screen
+ * @date 2025-04-09
+ */
+
 #ifndef TESTSPRITE_H
 #define TESTSPRITE_H
 #include <SFML/Graphics.hpp>
