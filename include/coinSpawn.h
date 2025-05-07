@@ -9,7 +9,7 @@ public:
     Coin();
     Coin(sf::Vector2f &pos);
     void drawSprite(sf::RenderWindow & window);
-
+    sf::Sprite & getSprite() {return mCoinSprite;}
    //destructor
     ~Coin(){}; //every time an enemy is destroyed make player earn currency
 

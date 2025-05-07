@@ -481,10 +481,9 @@
                     else{
                         currency+=2;
                         coinPos=(currentEnemies[i]->getSprite()).getPosition();
-                        coinPos.y+=20;
+                        coinPos.y+=50;
                         coinForKill.setPosition(coinPos);
                         enemyKill=true;
-                        game1.updateEnemies(currentEnemies); //should decrement size of the current enemy vector, allowing me to 
                         delete currentEnemies[i];
                         currentEnemies[i] = nullptr;
                     }
@@ -501,8 +500,11 @@
             }else if(enemyKill&&coinflip%5==0){
                 coinForKill.setRotation(180);
             }
-            coinForKill.drawSprite(window);
+            if (enemyKill)
+                coinForKill.drawSprite(window);
             coinflip++;
+            if(coinflip>20)
+                enemyKill=false;
             //coinForKill.drawSprite(window); // should be printing above not here -Thad
 
 
