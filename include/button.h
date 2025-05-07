@@ -1,3 +1,10 @@
+/**
+ * @file button.h
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran, primary credit to Ekaterina Miller
+ * @brief Used to create the many buttons found in the game
+ * @date 2025-04-09
+ */
+
 #ifndef BUTTON_H
 #define BUTTON_H
 #include <SFML/Graphics.hpp>

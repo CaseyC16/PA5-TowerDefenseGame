@@ -1,3 +1,10 @@
+/**
+ * @file archerSquirrel.cpp
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Implimentation File for archerSquirrel.h
+ * @date 2025-04-09
+ */
+
 #include "../include/assaultSquirrel.h"
 #include "../include/game.h"
 

@@ -1,3 +1,10 @@
+/**
+ * @file coneThrower.h
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Header File to Manage the ConeThrower Tower
+ * @date 2025-04-09
+ */
+
 #ifndef CONETHROWER_H
 #define CONETHROWER_H
 
