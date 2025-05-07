@@ -208,7 +208,7 @@
                     else if(isPlacingTower1)
                     {
                         newTower = new ConeThrower(sf::Vector2f(mousePos));
-                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,670.f,370.f)))
+                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
                         {
                             isPlacingTower1 = false;
                         }
@@ -220,7 +220,7 @@
                     else if(isPlacingTower2)
                     {
                         newTower = new ArcherSquirrel(sf::Vector2f(mousePos));
-                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,670.f,370.f)))
+                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
                         {
                             isPlacingTower2 = false;
                         }
@@ -232,7 +232,7 @@
                     else if(isPlacingTower3)
                     {
                         newTower = new AssaultSquirrel(sf::Vector2f(mousePos));
-                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,670.f,370.f)))
+                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
                         {
                             isPlacingTower3 = false;
                         }
