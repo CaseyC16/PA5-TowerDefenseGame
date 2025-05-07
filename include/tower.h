@@ -4,8 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
-#include <queue>
+#include <vector>
 #include "enemyclass.h"
+#include "pinecone.h"
 
 class Game; //forward declaration for Game class
 
@@ -37,6 +38,7 @@ protected:
     int mCost {0};  
     //int mDamage {0}; 
     std::vector<Enemy*> mTargets;
+    std::vector<PineCone*> mBullets;
 };
 
 #endif
