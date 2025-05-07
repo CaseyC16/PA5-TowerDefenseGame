@@ -97,7 +97,6 @@
     waypoints.push_back(sf::Vector2f(670.0f, 315.0f)); // lower 3
     waypoints.push_back(sf::Vector2f(670.0f, 400.0f)); // end  
 
-
     // Data For Round, Currency, Enemies, and Towers
     size_t spawnCount = 0;  //Amount of enemies Spawned
     sf::Clock enemySpawnTimer; //Interval Between enemy Spawns
@@ -326,6 +325,7 @@
                             e->setCurrentWaypoint(1); // Next waypoint is index 1.
                             game1.addEnemy(e);
                             currentEnemies.push_back(e);
+                            // game1.addEnemy(e);
                             spawnCount++;
                             frameCount = 0;
                         }
