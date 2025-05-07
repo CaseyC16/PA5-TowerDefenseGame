@@ -102,6 +102,7 @@
     int currency = 100;  
     int round = 1;
     bool roundInProgress = false;
+    int frameCount = 0;
     Game game1;
 
     //Text for Displaying Currency

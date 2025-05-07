@@ -11,6 +11,7 @@ class PineCone
 {
 public:
     PineCone() {} //default constructor
+    PineCone(sf::Vector2f startPos, Enemy *target);
     void update(float deltaTime);  // Move toward target
     bool hasHitTarget() const;
     bool outOfRange(const sf::FloatRect& bounds) const;

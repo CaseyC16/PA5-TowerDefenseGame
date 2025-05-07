@@ -73,3 +73,9 @@ void Tower::draw(sf::RenderWindow &window)
 {
     window.draw(mSprite);
 }
+
+void Tower::shoot(Enemy *target)
+{
+    //make Bullet object and add to Bullet vector
+    PineCone *newBullet = new PineCone(this->getPosition(), target);
+}

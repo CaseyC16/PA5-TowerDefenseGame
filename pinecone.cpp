@@ -1,8 +1,14 @@
 #include "../include/pinecone.h"
 
-Pinecone::Pinecone(sf::Vector2f startPos)
+PineCone::PineCone(sf::Vector2f startPos, Enemy *target)
 {
-    sprite.setTexture(texture);
+    //load texture
+    if(!mTexture.loadFromFile("resources/coneSquirrel.png"))
+    {
+        std::cout<<"Error opening file\n";
+        exit(1);
+    }
+    sprite.setTexture(mTexture);
     sprite.setPosition(startPos);
 
     mSpeed = 50;
@@ -15,17 +21,17 @@ Pinecone::Pinecone(sf::Vector2f startPos)
     }
 }
 
-void Pinecone::update(float deltaTime)
+void PineCone::update(float deltaTime)
 {
     mSprite.move(velocity * deltaTime);
 }
 
-bool Pinecone::hasHitTarget() const
+bool PineCone::hasHitTarget() const
 {
     return target && sprite.getGlobalBounds().intersects(target->getBounds());
 }
 
-bool Pinecone::outOfRange(const sf::FloatRect& bounds) const
+bool PineCone::outOfRange(const sf::FloatRect& bounds) const
 {
     return !bounds.intersects(sprite.getGlobalBounds());
 }
