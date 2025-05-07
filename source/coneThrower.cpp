@@ -1,3 +1,10 @@
+/**
+ * @file coneThrower.cpp
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Implimentation File for coneThrower.h
+ * @date 2025-04-09
+ */
+
 #include "../include/coneThrower.h"
 #include "../include/game.h"
 

@@ -1,3 +1,10 @@
+/**
+ * @file tower.h
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Header File for The Deployable Towers Used to Attack Humans
+ * @date 2025-04-09
+ */
+
 #ifndef TOWER_H
 #define TOWER_H
 

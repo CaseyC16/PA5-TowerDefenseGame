@@ -1,3 +1,10 @@
+/**
+ * @file enemyClass.h
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Related to all enemy creation, deletion, movement, and status
+ * @date 2025-04-09
+ */
+
 #ifndef ENEMYCLASS_H
 #define ENEMYCLASS_H
 
@@ -8,12 +15,9 @@
 #include <vector>
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
-//make an enum for a debuff state and normal state
-//enum state {normal, debuff};
-//make an enum for if the enemy got killed by a tower 
-//make an enum for enemy types
-enum enemyType {peasant, knight, heavyKnight};
 
+//enum for enemy types
+enum enemyType {peasant, knight, heavyKnight};
 
 class Enemy
 {
@@ -39,25 +43,17 @@ class Enemy
         void setSprite(const std::string & sprite);
         void drawSprite(sf::RenderWindow & window);
 
-        //enemy waypoints
-        //int getCurrentWaypoint() const { return mCurrentWaypoint; }
-        //void setCurrentWaypoint(int index) { mCurrentWaypoint = index; }
 
     //towers target enemies
     void targeted();
 
     //moves the enemies
-    int getCurrentWaypoint() const { return mCurrentWaypoint; }
+    size_t getCurrentWaypoint() const { return mCurrentWaypoint; }
     void setCurrentWaypoint(int waypoint);
-    void updateMovement(const std::vector<sf::Vector2f>& waypoints);
-    //static void EnemyMovementPath();
-    
-    //define vectors for waypoints
-    //static std::vector<sf::Vector2f> waypoints;
-    //static sf::Vector2f startPos;
+    void updateMovement(const std::vector<sf::Vector2f>& waypoints, float deltaTime);
 
     //destructor
-    ~Enemy(); //every time an enemy is destroyed make player earn currency
+    ~Enemy();
 
     private:
 

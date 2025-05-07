@@ -1,3 +1,10 @@
+/**
+ * @file Button.cpp
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran, created from Ekaterina Miller's Lecture
+ * @brief Implimentation File for button.h
+ * @date 2025-04-09
+ */
+
 #include "../include/button.h"
 
 //Constructor that sets button label to s, button position to the position,  button size to size (given in pixels), and button color to color.
