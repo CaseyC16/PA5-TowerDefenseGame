@@ -1,4 +1,6 @@
 #include "../include/coneThrower.h"
+#include "../include/game.h"
+
 
 ConeThrower::ConeThrower(sf::Vector2f position)
 {
@@ -17,7 +19,7 @@ ConeThrower::ConeThrower(sf::Vector2f position)
     //set origin to center
     sf::FloatRect bounds = mSprite.getLocalBounds();
     mSprite.setOrigin(sf::Vector2f(bounds.width / 2.f, bounds.height / 2.f));
-    mRadius = 50;
+    mRadius = 100;
     mPos = position;
     mFireRate = 1; //sleep one second between attacks
     //mDamage = 1; //take one hp from enemy
@@ -35,17 +37,17 @@ void ConeThrower::attack(std::queue<Enemy> &q)
     temp.targeted(); //shoot at enemy
 }
 
-bool ConeThrower::placeTower(Tower *tower, sf::Vector2f position, std::vector<Tower*> &placedTowers, int &currency, sf::FloatRect mapBounds)
+bool ConeThrower::placeTower(Tower *tower, sf::Vector2f position, Game &currentGame, int &currency, sf::FloatRect mapBounds)
 {
     //Check if position is on the map
-    if(!checkBounds(position, mapBounds, placedTowers))
+    if(!checkBounds(position, mapBounds, currentGame.getTowers()))
     {
         std::cout << "Invalid placement - click again on a valid location to place tower." << std::endl;
         return false;
     }
 
     //Check if player has enough currency
-    if(currency <= 50)
+    if(currency < 50)
     {
         std::cout << "Not enough currency to place tower." << std::endl;
         return false;
@@ -53,7 +55,7 @@ bool ConeThrower::placeTower(Tower *tower, sf::Vector2f position, std::vector<To
 
     Tower *newTower = new ConeThrower(sf::Vector2f(position));
     std::cout << "Placed ConeThrower at x = " << position.x << ", y = " << position.y << std::endl;
-    placedTowers.push_back(newTower);
+    currentGame.addTower(newTower);
     currency -= 50;
     return true;
 }
