@@ -12,6 +12,9 @@ class Tower
 public:
     void setPosition(sf::Vector2f position) {mPos = position;}
     sf::Vector2f getPosition() const {return mPos;}
+    sf::Sprite getSprite() const {return mSprite;}
+    virtual bool placeTower(Tower *tower, sf::Vector2f position, std::vector<Tower*> &placedTowers, int &currency, sf::FloatRect mapBounds) = 0;
+    bool checkBounds(sf::Vector2f position, sf::FloatRect mapBounds, std::vector<Tower*> placedTowers);
     virtual ~Tower() = default;
     void addTarget(Enemy e); //gets called in main every time an enemy enters the radius
     void removeTarget(Enemy e); //gets called in main every time an enemy leaves the radius
@@ -27,9 +30,10 @@ protected:
     //TestSprite mSprite; //tower sprite
     sf::Sprite mSprite {};
     sf::Vector2f mPos {0.f,0.f};
-    int mFireRate {0}; //sleep time between attacks  
+    int mFireRate {0}; //sleep time between attacks
+    int mCost {0};  
     //int mDamage {0}; 
-    std::queue<Enemy> mTargets;
+    std::vector<Enemy*> mTargets;
 };
 
 #endif

@@ -87,6 +87,7 @@
     waypoints.push_back(sf::Vector2f(670.0f, 315.0f)); // lower 3
     waypoints.push_back(sf::Vector2f(670.0f, 400.0f)); // end
     static int currency = 100;  
+
     static int round = 1;
     bool roundInProgress = false;
     std::vector<Enemy*> currentEnemies;
@@ -144,6 +145,11 @@
     menuButton.setColorTextHover(sf::Color(160,40,40));
     menuButton.setColorTextNormal(sf::Color(54, 50, 168));
 
+    //variables for tower placement
+    bool isPlacingTower1 = false;
+    bool isPlacingTower2 = false;
+    bool isPlacingTower3 = false;
+    Tower *newTower = nullptr;
 
     while(window.isOpen())
     {
@@ -207,39 +213,58 @@
                         currentEnemies.clear();
                     }
                 }
+                
                 //Detects When A Button on the Game Screen in Clicked
-                if (state == GAME_SCREEN) 
-                {
-                    if (event.type == sf::Event::MouseButtonPressed)
+//                 if (state == GAME_SCREEN) 
+//                 {
+// <<<<<<< cameronbranch
+//                     if (event.type == sf::Event::MouseButtonPressed)
+//                     {
+//                         // Get mouse position relative to the window.
+//                         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+//                         std::cout << "Mouse Clicked at: (" << mousePos.x << ", " << mousePos.y << ")" << std::endl;
+//                     }
+//                     if(towerBtn1.getBounds().contains(mousePos)) // && currency >= 1 (check if player has enough money)
+// =======
+                    
+//                     if(towerBtn1.getBounds().contains(mousePos) && currency >= 50)
+//                     {
+//                         isPlacingTower1 = true;
+//                     }
+//                     else if(isPlacingTower1)
+//                     {
+//                         newTower = new ConeThrower(sf::Vector2f(mousePos));
+//                         if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
+//                         {
+//                             isPlacingTower1 = false;
+//                         }
+//                     }
+//                     else if (towerBtn2.getBounds().contains(mousePos) && currency >= 80)
+// >>>>>>> main
+//                     {
+//                         isPlacingTower2 = true;
+//                     }
+                    else if(isPlacingTower2)
                     {
-                        // Get mouse position relative to the window.
-                        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                        std::cout << "Mouse Clicked at: (" << mousePos.x << ", " << mousePos.y << ")" << std::endl;
+                        newTower = new ArcherSquirrel(sf::Vector2f(mousePos));
+                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
+                        {
+                            isPlacingTower2 = false;
+                        }
                     }
-                    if(towerBtn1.getBounds().contains(mousePos)) // && currency >= 1 (check if player has enough money)
+                    else if (towerBtn3.getBounds().contains(mousePos) && currency >= 200)
                     {
-                        //Needs to Allow Player to Spawn and Place the Tower
-                        //Placeholder for now
-                        cout << "Tower 1 button clicked!" << endl;
-                        Tower *a = new ConeThrower(sf::Vector2f(100.f,100.f));
-                        placedTowers.push_back(a);
+                        isPlacingTower3 = true;
                     }
-                    if (towerBtn2.getBounds().contains(mousePos)) // && currency >= 2 (check if player has enough money)
+                    else if(isPlacingTower3)
                     {
-                        //Needs to Allow Player to Spawn and Place the Tower
-                        //Placeholder for now
-                        cout << "Tower 2 button clicked!" << endl;
-                        Tower *b = new ArcherSquirrel(sf::Vector2f(100.f,175.f));
-                        placedTowers.push_back(b);
+                        newTower = new AssaultSquirrel(sf::Vector2f(mousePos));
+                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
+                        {
+                            isPlacingTower3 = false;
+                        }
                     }
-                    if (towerBtn3.getBounds().contains(mousePos)) // && currency >= 3 (check if player has enough money)
-                    {
-                        //Needs to Allow Player to Spawn and Place the Tower
-                        //Placeholder for now                        
-                        cout << "Tower 3 button clicked!" << endl;
-                        Tower *c = new AssaultSquirrel(sf::Vector2f(100.f,250.f));
-                        placedTowers.push_back(c);
-                    }
+
                     //Starts the Round as long as its not already started
                     if (roundStartButton.getBounds().contains(mousePos) && !roundInProgress)
                     {
@@ -323,7 +348,7 @@
                     currentEnemies[i]->updateMovement(waypoints);
                     currentEnemies[i]->drawSprite(window);
                     //Checks if the enemy is alive
-                    if (1) //Add the way to check if the enemy is alive as a condition when implimented
+                    if (1) //Add the way to check if the enemy is alive as a condition when implemented
                     {
                         allDead = false;
                     }
