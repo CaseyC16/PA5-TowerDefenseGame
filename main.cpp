@@ -4,7 +4,7 @@
  * @brief Balloon Tower Defense Game
  * @date 2025-04-09
  */
-
+ 
  //COMPILE g++ -Wall main.cpp source/*.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
  //On Mac: g++ -Wall -std=c++11 main.cpp source/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -I/opt/homebrew/opt/sfml@2/include -L/opt/homebrew/opt/sfml@2/lib
  #include <iostream>
