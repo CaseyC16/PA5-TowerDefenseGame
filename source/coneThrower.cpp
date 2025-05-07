@@ -9,6 +9,11 @@
 #include "../include/game.h"
 
 
+/**
+ * @brief Construct a new Cone Thrower:: Cone Thrower object
+ * 
+ * @param position 
+ */
 ConeThrower::ConeThrower(sf::Vector2f position)
 {
     //load texture
@@ -34,6 +39,11 @@ ConeThrower::ConeThrower(sf::Vector2f position)
     mCost = 50;
 }
 
+/**
+ * @brief attack enemies
+ * 
+ * @param q 
+ */
 void ConeThrower::attack(std::queue<Enemy> &q)
 {
     //take one hp from first enemy in queue
@@ -44,6 +54,17 @@ void ConeThrower::attack(std::queue<Enemy> &q)
     temp.targeted(); //shoot at enemy
 }
 
+/**
+ * @brief place a tower
+ * 
+ * @param tower tower
+ * @param position  
+ * @param currentGame 
+ * @param currency 
+ * @param mapBounds 
+ * @return true 
+ * @return false 
+ */
 bool ConeThrower::placeTower(Tower *tower, sf::Vector2f position, Game &currentGame, int &currency, sf::FloatRect mapBounds)
 {
     //Check if position is on the map

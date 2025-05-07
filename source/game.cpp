@@ -7,6 +7,10 @@
 #include "../include/game.h"
 #include "../include/tower.h"
 
+/**
+ * @brief checks tower range
+ * 
+ */
 void Game::checkTowerRanges()
 {
     //tower cooldown (avoid rapid fire)
@@ -28,6 +32,12 @@ void Game::checkTowerRanges()
     //iterate through towers
     for(size_t i = 0; i < placedTowers.size(); i++)
     {
+        //make sure tower exists
+        if (!placedTowers[i])
+        {
+            continue;
+        }
+
         //skip tower if on cooldown
         if(i < towerCooldowns.size() && towerCooldowns[i] > 0)
         {
@@ -61,7 +71,7 @@ void Game::checkTowerRanges()
         }
         
         //shoot enemy if found
-        if(closestEnemy)
+        if(closestEnemy != nullptr)
         {
             std::cout << "Enemy in Range!! Shooting enemy!!\n";
             placedTowers[i]->shoot(closestEnemy, currentBullets);
@@ -92,6 +102,10 @@ void Game::checkTowerRanges()
     }
 }
 
+/**
+ * @brief clear enemies
+ * 
+ */
 void Game::clearEnemies()
 {
     //delete ptrs
@@ -106,6 +120,10 @@ void Game::clearEnemies()
     currentEnemies.clear();
 }
 
+/**
+ * @brief clear tower vector
+ * 
+ */
 void Game::clearTowers()
 {
     //delete ptrs
@@ -120,6 +138,10 @@ void Game::clearTowers()
     placedTowers.clear();
 }
 
+/**
+ * @brief clear bullet vector
+ * 
+ */
 void Game::clearBullets()
 {
     //delete ptrs
@@ -132,4 +154,38 @@ void Game::clearBullets()
     
     //clear vector
     currentBullets.clear();
+}
+
+/**
+ * @brief update enemy vector
+ * 
+ * @param updatedEnemies 
+ */
+void Game::updateEnemies(const std::vector<Enemy*>& updatedEnemies)
+{
+    //clean vector
+    currentEnemies.clear();
+    
+    for (auto* enemy : updatedEnemies) {
+        if (enemy != nullptr) {
+            currentEnemies.push_back(enemy);
+        }
+    }
+}
+
+/**
+ * @brief update bullets
+ * 
+ * @param updatedBullets 
+ */
+void Game::updateBullets(const std::vector<PineCone*>& updatedBullets)
+{
+    //clean vector
+    currentBullets.clear();
+    
+    for (auto* bullet : updatedBullets) {
+        if (bullet != nullptr) {
+            currentBullets.push_back(bullet);
+        }
+    }
 }

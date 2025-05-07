@@ -1,6 +1,22 @@
+/**
+ * @file pinecone.cpp
+ * @author Joseph Moran
+ * @brief  Implementation file for projectile class
+ * @version 0.1
+ * @date 2025-05-07
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include "../include/pinecone.h"
 #include <cmath>
 
+/**
+ * @brief Construct a new Pine Cone:: Pine Cone object
+ * 
+ * @param startPos starting position
+ * @param target Enemy
+ */
 PineCone::PineCone(sf::Vector2f startPos, Enemy *target)
 {
     //load texture
@@ -44,13 +60,14 @@ PineCone::PineCone(sf::Vector2f startPos, Enemy *target)
         {
             mVelocity = sf::Vector2f(0.f, 0.f);
         }
-
-        // sf::Vector2f dir = (target->getSprite()).getOrigin() - startPos;
-        // float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-        // mVelocity = (length != 0) ? (dir / length) * mSpeed : sf::Vector2f(0.f, 0.f);
     }
 }
 
+/**
+ * @brief update position of bullet
+ * 
+ * @param deltaTime 
+ */
 void PineCone::update(float deltaTime)
 {
     //mSprite.move(mVelocity * deltaTime);
@@ -63,15 +80,36 @@ void PineCone::update(float deltaTime)
     mSprite.rotate(360.0f * deltaTime); // Full rotation per second
 }
 
+/**
+ * @brief check if bullet hits enemy
+ * 
+ * @param target enemy
+ * @return true 
+ * @return false 
+ */
 bool PineCone::hasHitTarget(Enemy *target) const
 {
     //check if enemy exists
-    if (!target) return false;
-    
+    if (!target || (!target->getHealth()) > 0)
+    {
+        return false;
+    }
+
+    //get sprite bounds
+    sf::FloatRect targetBounds = target->getSprite().getGlobalBounds();
+    sf::FloatRect bulletBounds = mSprite.getGlobalBounds();
+
     //detect collisions
-    return mSprite.getGlobalBounds().intersects(target->getSprite().getGlobalBounds());
+    return bulletBounds.intersects(targetBounds);
 }
 
+/**
+ * @brief checks if bullet is out of range
+ * 
+ * @param bounds map boundary
+ * @return true 
+ * @return false 
+ */
 bool PineCone::outOfRange(const sf::FloatRect& bounds) const
 {
     //return !bounds.intersects(mSprite.getGlobalBounds());

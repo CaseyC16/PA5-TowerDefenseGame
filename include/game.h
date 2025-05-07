@@ -32,8 +32,8 @@ public:
     void clearTowers();
     void clearBullets();
     void addTower(Tower* newTower) {placedTowers.push_back(newTower);}
-    void updateEnemies(const std::vector<Enemy*>& updatedEnemies) {currentEnemies = updatedEnemies;}
-    void updateBullets(const std::vector<PineCone*>& updatedBullets) {currentBullets = updatedBullets;}
+    void updateEnemies(const std::vector<Enemy*>& updatedEnemies);
+    void updateBullets(const std::vector<PineCone*>& updatedBullets);
 private:
     std::vector<Enemy*> currentEnemies;
     std::vector<Tower*> placedTowers;

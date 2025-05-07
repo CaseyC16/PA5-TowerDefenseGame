@@ -353,6 +353,11 @@
 
         for (auto* bullet : currentBullets) 
         {
+            if (bullet == nullptr)
+            {
+                continue;
+            }
+
             bool bulletActive = true;
             
             //update bullet position

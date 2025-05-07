@@ -8,6 +8,11 @@
 #include "../include/assaultSquirrel.h"
 #include "../include/game.h"
 
+/**
+ * @brief Construct a new Assault Squirrel:: Assault Squirrel object
+ * 
+ * @param position 
+ */
 AssaultSquirrel::AssaultSquirrel(sf::Vector2f position)
 {
     //load texture
@@ -33,6 +38,11 @@ AssaultSquirrel::AssaultSquirrel(sf::Vector2f position)
     mCost = 200;
 }
 
+/**
+ * @brief attacks an enemy
+ * 
+ * @param q 
+ */
 void AssaultSquirrel::attack(std::queue<Enemy> &q)
 {
     //destroy all enemies in range
@@ -49,6 +59,17 @@ void AssaultSquirrel::attack(std::queue<Enemy> &q)
     }
 }
 
+/**
+ * @brief places a tower
+ * 
+ * @param tower 
+ * @param position 
+ * @param currentGame 
+ * @param currency 
+ * @param mapBounds 
+ * @return true 
+ * @return false 
+ */
 bool AssaultSquirrel::placeTower(Tower *tower, sf::Vector2f position, Game &currentGame, int &currency, sf::FloatRect mapBounds)
 {
     //Check if position is on the map
