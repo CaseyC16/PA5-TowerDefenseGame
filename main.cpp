@@ -373,9 +373,9 @@
                     //Debugging See How Many Enemies Spawned
                     std::cout << "Spawned enemy " << spawnCount << " of " << maxEnemiesThisRound << std::endl;
                     }
-                    else if(round < 7)
+                    else if(round > 7)
                     {
-                        if(maxEnemiesThisRound % 4 == 1)
+                        if(spawnCount % 4 == 0)
                         {
                             e = new Enemy(knight);
                         }
