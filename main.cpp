@@ -360,6 +360,9 @@
                 if (enemySpawnTimer.getElapsedTime().asSeconds() >= spawnInterval)
                 {
                     Enemy *e = new Enemy(peasant);
+                    if(round < 3)
+                    { 
+                    e = new Enemy(peasant);
                     e->getSprite().setPosition(waypoints[0]); //places enemy on first waypoint
                     e->setCurrentWaypoint(1); // routes to next Wyapoint
                     game1.addEnemy(e); // Adds the enemy into the game
@@ -369,6 +372,28 @@
                     
                     //Debugging See How Many Enemies Spawned
                     std::cout << "Spawned enemy " << spawnCount << " of " << maxEnemiesThisRound << std::endl;
+                    }
+                    else if(round < 7)
+                    {
+                        if(maxEnemiesThisRound % 4 == 1)
+                        {
+                            e = new Enemy(knight);
+                        }
+                        else
+                        {
+                            e = new Enemy(peasant);
+                        }
+                        
+                        e->getSprite().setPosition(waypoints[0]); //places enemy on first waypoint
+                        e->setCurrentWaypoint(1); // routes to next Wyapoint
+                        game1.addEnemy(e); // Adds the enemy into the game
+                        
+                        spawnCount++; //Enemy Has Spawned
+                        enemySpawnTimer.restart(); //Restarts timer for next Enemy
+                        
+                        //Debugging See How Many Enemies Spawned
+                        std::cout << "Spawned enemy " << spawnCount << " of " << maxEnemiesThisRound << std::endl;
+                    }
                 }
             }
 
