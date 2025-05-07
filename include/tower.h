@@ -12,6 +12,7 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include <vector>
+#include <queue>
 #include "enemyclass.h"
 #include "pinecone.h"
 
