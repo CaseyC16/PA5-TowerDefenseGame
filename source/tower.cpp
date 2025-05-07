@@ -1,4 +1,5 @@
 #include "../include/tower.h"
+#include "../include/game.h"
 
 bool Tower::checkBounds(sf::Vector2f position, sf::FloatRect mapBounds, std::vector<Tower*> placedTowers)
 {
@@ -50,16 +51,15 @@ bool Tower::checkBounds(sf::Vector2f position, sf::FloatRect mapBounds, std::vec
     return true;
 }
 
-void Tower::addTarget(Enemy e)
+void Tower::addTarget(Enemy *e)
 {
-    //have a piece of code in main that detects when an enemy enters the radius
-    mTargets.push(e);
+    mTargets.push_back(e);
 }
 
 void Tower::removeTarget(Enemy e)
 {
     //have a piece of code in main that detects when an enemy leaves the radius
-    mTargets.pop();
+    //mTargets.pop();
 }
 
 void Tower::draw(sf::RenderWindow &window)

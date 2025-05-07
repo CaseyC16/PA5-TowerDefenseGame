@@ -15,6 +15,7 @@
  #include "include/coneThrower.h"
  #include "include/archerSquirrel.h"
  #include "include/assaultSquirrel.h"
+ #include "include/game.h"
  
  using std::cout;
  using std::endl;
@@ -69,12 +70,14 @@
     waypoints.push_back(sf::Vector2f(105.0f, 70.0f)); // second
     waypoints.push_back(sf::Vector2f(128.0f, 110.0f)); // third
     waypoints.push_back(sf::Vector2f(402.5f, 220.0f)); // final path
-    static int currency = 100;  
+    static int currency = 1000;  
 
     static int round = 1;
     bool roundInProgress = false;
-    std::vector<Enemy*> currentEnemies;
-    std::vector<Tower*> placedTowers;
+    //moved to Game class
+    // std::vector<Enemy*> currentEnemies;
+    // std::vector<Tower*> placedTowers;
+    Game game1;
 
     //Text for Displaying Currency
     sf::Text currencyText("Acorns: " + std::to_string(currency), font, 20);
@@ -187,13 +190,13 @@
                         round = 1;
                         currency = 100;
                         state = GAME_SCREEN;
-                        currentEnemies.clear();
+                        game1.clearEnemies();
                     }
                     //Brings the player back to the menu
                     else if (menuButton.getBounds().contains(mousePos))
                     {
                         state = TITLE_SCREEN;
-                        currentEnemies.clear();
+                        game1.clearEnemies();
                     }
                 }
                 
@@ -208,7 +211,7 @@
                     else if(isPlacingTower1)
                     {
                         newTower = new ConeThrower(sf::Vector2f(mousePos));
-                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
+                        if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
                         {
                             isPlacingTower1 = false;
                         }
@@ -220,7 +223,7 @@
                     else if(isPlacingTower2)
                     {
                         newTower = new ArcherSquirrel(sf::Vector2f(mousePos));
-                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
+                        if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
                         {
                             isPlacingTower2 = false;
                         }
@@ -232,7 +235,7 @@
                     else if(isPlacingTower3)
                     {
                         newTower = new AssaultSquirrel(sf::Vector2f(mousePos));
-                        if(newTower->placeTower(newTower, mousePos, placedTowers, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
+                        if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
                         {
                             isPlacingTower3 = false;
                         }
@@ -246,10 +249,10 @@
                         for (int i = 0; i < 10 + round * 2; ++i)
                         {
                             Enemy * e = new Enemy(peasant);
-                            currentEnemies.push_back(e);
+                            game1.addEnemy(e);
                             e->getSprite().setPosition(waypoints[0]);
                             e->setCurrentWaypoint(1); // Next waypoint is index 1.
-                            currentEnemies.push_back(e);
+                            game1.addEnemy(e);
                         }
                     }
                 }
@@ -302,7 +305,8 @@
             //Assumes all enemies are dead unless the check below states otherwise
             bool allDead = true;
             //Iterates through every enemy spawned
-            for (size_t i = 0; i < currentEnemies.size(); ++i)
+            std::vector<Enemy*> currentEnemies = game1.getEnemies();
+            for (size_t i = 0; i < game1.getNumOfEnemies(); ++i)
             {
                 //if there is still an enemy in the vector
                 if (currentEnemies[i])
@@ -319,9 +323,9 @@
             }
 
             //draw any placed towers
-            for (size_t i = 0; i < placedTowers.size(); i++)
+            for (size_t i = 0; i < game1.getNumOfTowers(); i++)
             {
-                placedTowers[i]->draw(window);
+                (game1.getTowers())[i]->draw(window);
             }
 
             //Ends the round and moves it forward after all enemies are defeated
@@ -335,8 +339,8 @@
                {
                    delete currentEnemies[i];
                }
-
-                currentEnemies.clear();
+               //clear enemy vector
+               game1.clearEnemies();
             }
 
             window.display();

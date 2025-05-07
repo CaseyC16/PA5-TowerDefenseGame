@@ -1,4 +1,5 @@
 #include "../include/assaultSquirrel.h"
+#include "../include/game.h"
 
 AssaultSquirrel::AssaultSquirrel(sf::Vector2f position)
 {
@@ -41,17 +42,17 @@ void AssaultSquirrel::attack(std::queue<Enemy> &q)
     }
 }
 
-bool AssaultSquirrel::placeTower(Tower *tower, sf::Vector2f position, std::vector<Tower*> &placedTowers, int &currency, sf::FloatRect mapBounds)
+bool AssaultSquirrel::placeTower(Tower *tower, sf::Vector2f position, Game &currentGame, int &currency, sf::FloatRect mapBounds)
 {
     //Check if position is on the map
-    if(!checkBounds(position, mapBounds, placedTowers))
+    if(!checkBounds(position, mapBounds, currentGame.getTowers()))
     {
         std::cout << "Invalid placement - click again on a valid location to place tower." << std::endl;
         return false;
     }
 
     //Check if player has enough currency
-    if(currency <= 200)
+    if(currency < 200)
     {
         std::cout << "Not enough currency to place tower." << std::endl;
         return false;
@@ -59,7 +60,7 @@ bool AssaultSquirrel::placeTower(Tower *tower, sf::Vector2f position, std::vecto
 
     Tower *newTower = new AssaultSquirrel(sf::Vector2f(position));
     std::cout << "Placed Assault Squirrel at x = " << position.x << ", y = " << position.y << std::endl;
-    placedTowers.push_back(newTower);
+    currentGame.addTower(newTower);
     currency -= 200;
     return true;
 }

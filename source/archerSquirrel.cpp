@@ -1,4 +1,5 @@
 #include "../include/archerSquirrel.h"
+#include "../include/game.h"
 
 ArcherSquirrel::ArcherSquirrel(sf::Vector2f position)
 {
@@ -37,17 +38,17 @@ void ArcherSquirrel::attack(std::queue<Enemy> &q)
     }
 }
 
-bool ArcherSquirrel::placeTower(Tower *tower, sf::Vector2f position, std::vector<Tower*> &placedTowers, int &currency, sf::FloatRect mapBounds)
+bool ArcherSquirrel::placeTower(Tower *tower, sf::Vector2f position, Game &currentGame, int &currency, sf::FloatRect mapBounds)
 {
     //Check if position is on the map
-    if(!checkBounds(position, mapBounds, placedTowers))
+    if(!checkBounds(position, mapBounds, currentGame.getTowers()))
     {
         std::cout << "Invalid placement - click again on a valid location to place tower." << std::endl;
         return false;
     }
 
     //Check if player has enough currency
-    if(currency <= 80)
+    if(currency < 80)
     {
         std::cout << "Not enough currency to place tower." << std::endl;
         return false;
@@ -55,7 +56,7 @@ bool ArcherSquirrel::placeTower(Tower *tower, sf::Vector2f position, std::vector
 
     Tower *newTower = new ArcherSquirrel(sf::Vector2f(position));
     std::cout << "Placed Archer Squirrel at x = " << position.x << ", y = " << position.y << std::endl;
-    placedTowers.push_back(newTower);
+    currentGame.addTower(newTower);
     currency -= 80;
     return true;
 }
