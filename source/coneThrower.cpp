@@ -12,7 +12,7 @@
 ConeThrower::ConeThrower(sf::Vector2f position)
 {
     //load texture
-    if(!mTexture.loadFromFile("resources/coneSquirrel.png"))
+    if(!mTexture.loadFromFile("resources/PineConeThrowerSquirrelFinalProject2025(RightFace).png"))
     {
         std::cout<<"Error opening file\n";
         exit(1);

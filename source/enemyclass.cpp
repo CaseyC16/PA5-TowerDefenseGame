@@ -59,6 +59,7 @@ void Enemy::setHealth(int newhealth)
     {
         mHealth = newhealth;
     }
+    //else remove the png for that enemy from the vector
 }
 
 /**
