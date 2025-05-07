@@ -1,3 +1,10 @@
+/**
+ * @file assaultSquirrel.h
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Header File to Manage the assaultSquirrel Tower
+ * @date 2025-04-09
+ */
+
 #ifndef ASSAULTSQUIRREL_H
 #define ASSAULTSQUIRREL_H
 

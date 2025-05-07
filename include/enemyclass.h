@@ -1,3 +1,10 @@
+/**
+ * @file enemyClass.h
+ * @author Casey Cook, Cameron Bauman, Thad Selby, Joseph Moran
+ * @brief Related to all enemy creation, deletion, movement, and status
+ * @date 2025-04-09
+ */
+
 #ifndef ENEMYCLASS_H
 #define ENEMYCLASS_H
 
@@ -47,9 +54,9 @@ class Enemy
     void targeted();
 
     //moves the enemies
-    int getCurrentWaypoint() const { return mCurrentWaypoint; }
+    size_t getCurrentWaypoint() const { return mCurrentWaypoint; }
     void setCurrentWaypoint(int waypoint);
-    void updateMovement(const std::vector<sf::Vector2f>& waypoints);
+    void updateMovement(const std::vector<sf::Vector2f>& waypoints, float deltaTime);
     //static void EnemyMovementPath();
     
     //define vectors for waypoints
