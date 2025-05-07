@@ -318,7 +318,7 @@
                     }
                     if(roundInProgress && static_cast<size_t>(10 + round * 2))
                     {
-                        if(frameCount >= 10)
+                        if(frameCount >= 30)
                         {
                             Enemy * e = new Enemy(peasant);
                             game1.addEnemy(e);
@@ -335,8 +335,7 @@
                         }
                         //Spawns a specified number of enemies depending on the round number
                         maxEnemiesThisRound = 10 + round * 2;
-                        spawnCount = 0;
-                        frameCount = 0;
+
 
                     }
                 }
@@ -391,9 +390,6 @@
             window.draw(towerBtn3);
             window.draw(roundStartButton);
             currencyIndicatorCoin.drawSprite(window);
-            // sf::Vector2f coinPosition;
-            // coinPosition.x=100;coinPosition.y=185;
-            // Coin currencyCoin(coinPosition);
 
             // Enemy spawning logic
             if (roundInProgress && spawnCount < maxEnemiesThisRound)
@@ -460,22 +456,29 @@
                     else{
                         currency+=2;
                         coinPos=(currentEnemies[i]->getSprite()).getPosition();
+                        coinPos.y+=20;
                         coinForKill.setPosition(coinPos);
                         enemyKill=true;
+                        game1.updateEnemies(currentEnemies); //should decrement size of the current enemy vector, allowing me to 
+                        delete currentEnemies[i];
+                        currentEnemies[i] = nullptr;
                     }
-                    // if(frameCount==10)
-                    //     currentEnemies[i]->setHealth(0);
                 }
-            }enemyKill=true;
-            static int coinflip=0; //need to make this transition slower, probably with a count so that it isnt too fast
-            if (enemyKill&&!coinflip%10){
-                coinForKill.setRotation(0);
-                coinForKill.drawSprite(window);
-            }else if(enemyKill&&!coinflip%5){
-                coinForKill.setRotation(180);
-                coinForKill.drawSprite(window);
+                if (frameCount>10&&frameCount<15){ //just to test killing them to spawn my coins in -Thad
+                    currentEnemies[i]->setHealth(0);
+                    frameCount=16;
+                }////////////////////////////////////////////////////////
             }
+            
+            static int coinflip=0; //need to make this transition slower, probably with a count so that it isnt too fast
+            if (enemyKill&&coinflip%10==0){
+                coinForKill.setRotation(0);
+            }else if(enemyKill&&coinflip%5==0){
+                coinForKill.setRotation(180);
+            }
+            coinForKill.drawSprite(window);
             coinflip++;
+            //coinForKill.drawSprite(window); // should be printing above not here -Thad
 
 
             // Update the game's enemies vector with any changes
