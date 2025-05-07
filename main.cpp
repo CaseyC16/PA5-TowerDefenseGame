@@ -68,12 +68,7 @@
     size_t spawnCount = 0;
     sf::Clock enemySpawnTimer;
     std::vector<sf::Vector2f> waypoints;
-    waypoints.push_back(sf::Vector2f(52.5f, 20.0f));  // first
-    waypoints.push_back(sf::Vector2f(105.0f, 70.0f)); // second
-    waypoints.push_back(sf::Vector2f(128.0f, 110.0f)); // third
-    waypoints.push_back(sf::Vector2f(402.5f, 220.0f)); // final path
-    static int currency = 100;  
-    //first loop
+    // Define waypoints for enemy path
     waypoints.push_back(sf::Vector2f(160.0f, 0.0f));  // spawn
     waypoints.push_back(sf::Vector2f(160.0f, 100.0f)); // upper 1
     waypoints.push_back(sf::Vector2f(160.0f, 315.0f)); // lower 1
@@ -92,13 +87,10 @@
     waypoints.push_back(sf::Vector2f(340.5f, 315.0f)); // lower 2
     waypoints.push_back(sf::Vector2f(670.0f, 315.0f)); // lower 3
     waypoints.push_back(sf::Vector2f(670.0f, 400.0f)); // end
-    static int currency = 100;  
 
+    static int currency = 100;  
     static int round = 1;
     bool roundInProgress = false;
-    //moved to Game class
-    // std::vector<Enemy*> currentEnemies;
-    // std::vector<Tower*> placedTowers;
     Game game1;
 
     //Text for Displaying Currency
@@ -118,7 +110,6 @@
 
     // Texture for Map/Path
     sf::Texture mapTexture;
-    mapTexture.loadFromFile("resources/final project image 2.0 cleaner.png");
     if (!mapTexture.loadFromFile("resources/final project image 2.0 cleaner.png")) 
     {
         cout << "Failed to load map texture" << endl;
@@ -159,6 +150,9 @@
     bool isPlacingTower3 = false;
     Tower *newTower = nullptr;
 
+    // Variables for enemy spawning
+    size_t maxEnemiesThisRound = 0;
+    
     while(window.isOpen())
     {
         sf::Event event;
@@ -222,7 +216,7 @@
                     }
                 }
                 
-                Detects When A Button on the Game Screen in Clicked
+                // Detects When A Button on the Game Screen is Clicked
                 if (state == GAME_SCREEN) 
                 {
                     if (event.type == sf::Event::MouseButtonPressed)
@@ -272,26 +266,10 @@
                     if (roundStartButton.getBounds().contains(mousePos) && !roundInProgress)
                     {
                         roundInProgress = true;
-                        //Spawns a specified number of enemies depending on the round number using a vector
-                       
-                    }
-                    if(roundInProgress && static_cast<size_t>(10 + round * 2))
-                    {
-                        if(frameCount >= 30)
-                        {
-                            Enemy * e = new Enemy(peasant);
-                            game1.addEnemy(e);
-                            e->getSprite().setPosition(waypoints[0]);
-                            e->setCurrentWaypoint(1); // Next waypoint is index 1.
-                            game1.addEnemy(e);
-                            currentEnemies.push_back(e);
-                            spawnCount++;
-                            frameCount = 0;
-                        }
-                        else
-                        {
-                            frameCount++;
-                        }
+                        //Spawns a specified number of enemies depending on the round number
+                        maxEnemiesThisRound = 10 + round * 2;
+                        spawnCount = 0;
+                        frameCount = 0;
                     }
                 }
             }
@@ -340,6 +318,27 @@
             window.draw(towerBtn3);
             window.draw(roundStartButton);
 
+            // Enemy spawning logic
+            if (roundInProgress && spawnCount < maxEnemiesThisRound)
+            {
+                if (frameCount >= 30) // Spawn an enemy every 30 frames
+                {
+                    Enemy *e = new Enemy(peasant);
+                    e->getSprite().setPosition(waypoints[0]); // Set initial position
+                    e->setCurrentWaypoint(1); // Next waypoint is index 1
+                    game1.addEnemy(e); // Add to game
+                    
+                    spawnCount++;
+                    frameCount = 0;
+                    
+                    std::cout << "Spawned enemy " << spawnCount << " of " << maxEnemiesThisRound << std::endl;
+                }
+                else
+                {
+                    frameCount++;
+                }
+            }
+
             //Assumes all enemies are dead unless the check below states otherwise
             bool allDead = true;
             //Iterates through every enemy spawned
@@ -352,8 +351,9 @@
                     //Draw the enemy
                     currentEnemies[i]->updateMovement(waypoints);
                     currentEnemies[i]->drawSprite(window);
+                    
                     //Checks if the enemy is alive
-                    if (1) //Add the way to check if the enemy is alive as a condition when implemented
+                    if (currentEnemies[i]->getHealth() > 0) // Check if enemy is alive
                     {
                         allDead = false;
                     }
@@ -367,18 +367,16 @@
             }
 
             //Ends the round and moves it forward after all enemies are defeated
-            if (roundInProgress && allDead)
+            if (roundInProgress && allDead && spawnCount >= maxEnemiesThisRound)
             {
                 roundInProgress = false;
                 round++;
+                
+                // Add currency for completing the round
+                currency += 25 + (round * 5);
 
-                // Frees the memory for each enemy spawned at the beginning of the round
-               for (size_t i = 0; i < currentEnemies.size(); ++i)
-               {
-                   delete currentEnemies[i];
-               }
-               //clear enemy vector
-               game1.clearEnemies();
+                // Clear enemies for the next round
+                game1.clearEnemies();
             }
 
             window.display();
