@@ -17,7 +17,7 @@ public:
     // void updateMovement(const std::vector<sf::Vector2f>& waypoints);
 
    //destructor
-    ~Coin(); //every time an enemy is destroyed make player earn currency
+    ~Coin(){}; //every time an enemy is destroyed make player earn currency
 
 private:
 

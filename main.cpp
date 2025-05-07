@@ -135,7 +135,7 @@
     bool isPlacingTower3 = false;
     Tower *newTower = nullptr;
     Coin pineCoin;
-    pineCoin.setSprite("resources/pineCoinForCSFinal.png"); // Thads coin sprite
+    pineCoin.setSprite("resources/PineCoinForCSFinal.png"); // Thads coin sprite
 
     while(window.isOpen())
     {
@@ -291,7 +291,7 @@
             mapSprite.setScale(700.f / 2564.f, 400.f / 2152.f);
             window.draw(mapSprite);
 
-            currencyText.setString("Acorns: " + std::to_string(currency));
+            currencyText.setString("PineCoins: " + std::to_string(currency));
             roundText.setString("Round: " + std::to_string(round));
             window.draw(currencyText);
             window.draw(roundText);
@@ -305,8 +305,12 @@
             //Assumes all enemies are dead unless the check below states otherwise
             bool allDead = true;
             //Iterates through every enemy spawned
+            sf::Vector2f coinPosition;  // I want a variable to save a position to so i can print a coin over their head.
             for (size_t i = 0; i < currentEnemies.size(); ++i)
             {
+                coinPosition = currentEnemies[i]->getSprite().getPosition(); // this will allow me to keep track of the enemies and where a coin should be if they die -Thad
+                //if enemy dies, pineCoin.drawSprite(window);
+                
                 //if there is still an enemy in the vector
                 if (currentEnemies[i])
                 {
