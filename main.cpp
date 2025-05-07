@@ -93,7 +93,7 @@
     waypoints.push_back(sf::Vector2f(160.0f, 315.0f)); // lower 1
     waypoints.push_back(sf::Vector2f(340.5f, 315.0f)); // lower 2
     waypoints.push_back(sf::Vector2f(670.0f, 315.0f)); // lower 3
-    waypoints.push_back(sf::Vector2f(670.0f, 400.0f)); // end
+    waypoints.push_back(sf::Vector2f(670.0f, 400.0f)); // end  
 
     // Data For Round, Currency, Enemies, and Towers
     size_t spawnCount = 0;  //Amount of enemies Spawned
@@ -301,6 +301,26 @@
                     if (roundStartButton.getBounds().contains(mousePos) && !roundInProgress)
                     {
                         roundInProgress = true;
+                        //Spawns a specified number of enemies depending on the round number using a vector
+                       
+                    }
+                    if(roundInProgress && static_cast<size_t>(10 + round * 2))
+                    {
+                        if(frameCount >= 30)
+                        {
+                            Enemy * e = new Enemy(peasant);
+                            game1.addEnemy(e);
+                            e->getSprite().setPosition(waypoints[0]);
+                            e->setCurrentWaypoint(1); // Next waypoint is index 1.
+                            game1.addEnemy(e);
+                            // game1.addEnemy(e);
+                            spawnCount++;
+                            frameCount = 0;
+                        }
+                        else
+                        {
+                            frameCount++;
+                        }
                         //Spawns a specified number of enemies depending on the round number
                         maxEnemiesThisRound = 10 + round * 2;
                         spawnCount = 0;
