@@ -125,7 +125,7 @@ void Enemy::targeted()
     }
     else if (getHealth() <= 0)
     {
-        delete this;
+        markedDelete = true;
     }
 }
 

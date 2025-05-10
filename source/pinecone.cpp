@@ -19,6 +19,8 @@
  */
 PineCone::PineCone(sf::Vector2f startPos, Enemy *target)
 {
+    mTarget = target;
+    
     //load texture
     if(!mTexture.loadFromFile("resources/singlePineConeFinalProject.png"))
     {
@@ -41,9 +43,9 @@ PineCone::PineCone(sf::Vector2f startPos, Enemy *target)
     mSprite.setPosition(mPosition);
     mSpeed = 200.0f;
 
-    if(target) 
+    if(mTarget) 
     {
-        sf::Vector2f targetPos = target->getSprite().getPosition();
+        sf::Vector2f targetPos = mTarget->getSprite().getPosition();
         sf::Vector2f dir = targetPos - startPos;
         float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
         
@@ -68,7 +70,7 @@ PineCone::PineCone(sf::Vector2f startPos, Enemy *target)
  * 
  * @param deltaTime 
  */
-void PineCone::update(float deltaTime)
+void PineCone::update(float deltaTime, std::vector<Enemy*>& enemies)
 {
     //mSprite.move(mVelocity * deltaTime);
 
@@ -78,6 +80,17 @@ void PineCone::update(float deltaTime)
     
     //add spin to pinecone
     mSprite.rotate(360.0f * deltaTime); // Full rotation per second
+
+    // when an enemy is hit target the enemy and mark it for deletion
+    for (size_t i = 0; i < enemies.size(); ++i) 
+    {
+        if (enemies[i] && hasHitTarget(enemies[i])) 
+        {
+            enemies[i]->targeted();
+            markedDelete = true;
+            break;
+        }
+    }
 }
 
 /**
@@ -90,17 +103,13 @@ void PineCone::update(float deltaTime)
 bool PineCone::hasHitTarget(Enemy *target) const
 {
     //check if enemy exists
-    if (!target || (!target->getHealth()) > 0)
+    if (!target || target->getHealth() <= 0)
     {
         return false;
     }
 
-    //get sprite bounds
-    sf::FloatRect targetBounds = target->getSprite().getGlobalBounds();
-    sf::FloatRect bulletBounds = mSprite.getGlobalBounds();
-
-    //detect collisions
-    return bulletBounds.intersects(targetBounds);
+    //return the collision detection of the sprite
+    return mSprite.getGlobalBounds().intersects(target->getSprite().getGlobalBounds());
 }
 
 /**

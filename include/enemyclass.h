@@ -52,6 +52,7 @@ class Enemy
     void setCurrentWaypoint(int waypoint);
     void updateMovement(const std::vector<sf::Vector2f>& waypoints, float deltaTime);
 
+    bool isMarked() const { return markedDelete; }
     //destructor
     ~Enemy();
 
@@ -63,6 +64,7 @@ class Enemy
     sf::Sprite mSprite;
     sf::Texture mTexture;
     enemyType mType;
+    bool markedDelete = false;
 };
 
 #endif //guard code

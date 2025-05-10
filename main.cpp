@@ -21,8 +21,8 @@
  using std::endl;
  using std::string;
  
- int main()
- {
+int main()
+{
     enum Screen {TITLE_SCREEN, RULES_SCREEN, GAME_SCREEN, GAME_OVER_SCREEN};
 
     //set default state
@@ -86,7 +86,7 @@
 
     // Waypoints for Sprites to Walk to so they can loop around
     std::vector<sf::Vector2f> waypoints;
-    //First Loop
+    //first Loop
     waypoints.push_back(sf::Vector2f(160.0f, 0.0f));  // spawn
     waypoints.push_back(sf::Vector2f(160.0f, 100.0f)); // upper 1
     waypoints.push_back(sf::Vector2f(160.0f, 315.0f)); // lower 1
@@ -113,7 +113,6 @@
     int currency = 100;  
     int round = 1;
     bool roundInProgress = false;
-    int frameCount = 0;
     Game game1;
 
     //Text for Displaying Currency
@@ -175,10 +174,13 @@
     std::vector<Coin> pineCoins;
     sf::Vector2f coinPos;
     Coin coinForKill;
-    bool enemyKill=false;
+    bool enemyKill = false;
 
     // Variables for enemy spawning
     size_t maxEnemiesThisRound = 0;
+    
+    // Define play area for bullet bounds checking
+    sf::FloatRect playArea(0, 0, 700, 400);
     
     while(window.isOpen())
     {
@@ -201,6 +203,7 @@
             roundStartButton.update(event, window);
             retryButton.update(event, window);
             menuButton.update(event, window);
+            backButton.update(event, window);
  
             //Checks if the user clicks on either button in the main screen and moves them to the correct
             //Screen depending on what button they click on
@@ -225,8 +228,11 @@
                     round = 1;
                     currency = 100;
                     roundInProgress = false;
+                    spawnCount = 0;
+                    maxEnemiesThisRound = 0;
                     game1.clearEnemies();
                     game1.clearTowers();
+                    game1.clearBullets();
                 }
                 //Detects if the player is on the rules screen and if they clicked the back button
                 else if (state == RULES_SCREEN && backButton.getBounds().contains(mousePos)) 
@@ -239,15 +245,19 @@
                 {
                     //Resets the Round and Currency and enemies, while bringing the player back into the game loop
                     if (retryButton.getBounds().contains(mousePos))
-                    {
+                    { 
+                        //Moves into the Game
+                        state = GAME_SCREEN;
+                        
+                        // Reset game values when entering the game from title screen
                         round = 1;
                         currency = 100;
                         roundInProgress = false;
                         spawnCount = 0;
                         maxEnemiesThisRound = 0;
-                        state = GAME_SCREEN;
                         game1.clearEnemies();
                         game1.clearTowers();
+                        game1.clearBullets();
                     }
                     //Brings the player back to the title
                     else if (menuButton.getBounds().contains(mousePos))
@@ -255,244 +265,136 @@
                         state = TITLE_SCREEN;
                         game1.clearEnemies();
                         game1.clearTowers();
+                        game1.clearBullets();
                     }
                 }
                 
                 //Detects When A Button on the Game Screen in Clicked
                 if (state == GAME_SCREEN) 
                 {
-                    if (event.type == sf::Event::MouseButtonPressed)
-                    {
-                        // Get mouse position relative to the window.
-                        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                        std::cout << "Mouse Clicked at: (" << mousePos.x << ", " << mousePos.y << ")" << std::endl;
-                    }
-                    //Deducts 50 Acorns and Allows the Player to Place the Tower
+                    // checks if the tower button is pressed and if you have enough currency
                     if(towerBtn1.getBounds().contains(mousePos) && currency >= 50)
                     {
+                        // locks player in so that they can spawn a tower
                         isPlacingTower1 = true;
+                        isPlacingTower2 = false;
+                        isPlacingTower3 = false;
+                        std::cout << "Selected Cone Tower for placement" << std::endl;
                     }
-                    //If player is currently placing the tower, it will allow them to place it down
-                    else if(isPlacingTower1)
-                    {
-                        newTower = new ConeThrower(sf::Vector2f(mousePos));
-                        //Operates as a bounds check, preventing the player from placing the tower on the path or outside the map
-                        if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
-                        {
-                            isPlacingTower1 = false;
-                        }
-                    }
-                    //Deducts 50 Acorns and Allows the Player to Place the Tower
+                    // checks if the tower button is pressed and if you have enough currency
                     else if (towerBtn2.getBounds().contains(mousePos) && currency >= 80)
                     {
+                        // locks player in so that they can spawn a tower
+                        isPlacingTower1 = false;
                         isPlacingTower2 = true;
+                        isPlacingTower3 = false;
+                        std::cout << "Selected Archer Tower for placement" << std::endl;
                     }
-                    //If player is currently placing the tower, it will allow them to place it down
-                    else if(isPlacingTower2)
-                    {
-                        newTower = new ArcherSquirrel(sf::Vector2f(mousePos));
-                        //Operates as a bounds check, preventing the player from placing the tower on the path or outside the map                       
-                        if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
-                        {
-                            isPlacingTower2 = false;
-                        }
-                    }
-                    //Deducts 50 Acorns and Allows the Player to Place the Tower
+                    // checks if the tower button is pressed and if you have enough currency
                     else if (towerBtn3.getBounds().contains(mousePos) && currency >= 200)
                     {
+                        // locks player in so that they can spawn a tower
+                        isPlacingTower1 = false;
+                        isPlacingTower2 = false;
                         isPlacingTower3 = true;
+                        std::cout << "Selected Assault Tower for placement" << std::endl;
                     }
-                    //If player is currently placing the tower, it will allow them to place it down
-                    else if(isPlacingTower3)
+                    // checks if you are placing a tower
+                    else if(isPlacingTower1 || isPlacingTower2 || isPlacingTower3)
                     {
-                        newTower = new AssaultSquirrel(sf::Vector2f(mousePos));
-                        //Operates as a bounds check, preventing the player from placing the tower on the path or outside the map                        
-                        if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
+                        // spawns in the cone tower
+                        if(isPlacingTower1)
                         {
-                            isPlacingTower3 = false;
+                            newTower = new ConeThrower(sf::Vector2f(mousePos));
+                            if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
+                            {
+                                isPlacingTower1 = false;
+                            }
+                        }
+                        // spawns in the archer tower
+                        else if(isPlacingTower2)
+                        {
+                            newTower = new ArcherSquirrel(sf::Vector2f(mousePos));
+                            if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
+                            {
+                                isPlacingTower2 = false;
+                            }
+                        }
+                        // spawns in the assault tower
+                        else if(isPlacingTower3)
+                        {
+                            newTower = new AssaultSquirrel(sf::Vector2f(mousePos));
+                            if(newTower->placeTower(newTower, mousePos, game1, currency, sf::FloatRect(30.f,30.f,640.f,340.f)))
+                            {
+                                isPlacingTower3 = false;
+                            }
                         }
                     }
-                    std::cout<<"Current frame count is: "<<frameCount<<std::endl;
+                    
                     //Starts the Round as long as its not already started
                     if (roundStartButton.getBounds().contains(mousePos) && !roundInProgress)
                     {
                         roundInProgress = true;
-                        //Spawns a specified number of enemies depending on the round number using a vector
-                       
-                    }
-                    if(roundInProgress && static_cast<size_t>(10 + round * 2))
-                    {
-                        if(frameCount >= 30)
-                        {
-                            Enemy * e = new Enemy(peasant);
-                            game1.addEnemy(e);
-                            e->getSprite().setPosition(waypoints[0]);
-                            e->setCurrentWaypoint(1); // Next waypoint is index 1.
-                            game1.addEnemy(e);
-                            //currentEnemies.push_back(e);
-                            // game1.addEnemy(e);
-                            spawnCount++;
-                            frameCount = 0;
-                        }
-                        else
-                        {
-                            frameCount++;
-                        }
+                        spawnCount = 0;
                         //Spawns a specified number of enemies depending on the round number
                         maxEnemiesThisRound = 10 + round * 2;
-
-
                     }
-
-                    //check for tower/enemy overlap
-                    game1.checkTowerRanges();
-                    //check for enemy/bullet overlap
-
                 }
             }
         }
         
-        //track bullets as they are released
-        std::vector<PineCone*> currentBullets = game1.getBullets();
-        std::vector<PineCone*> activeBullets;
-
-        //define bounds to check if bullets leave map
-        sf::FloatRect playArea(0, 0, 700, 400);
-
-        for (auto* bullet : currentBullets) 
-        {
-            if (bullet == nullptr)
-            {
-                continue;
-            }
-
-            bool bulletActive = true;
-            
-            //update bullet position
-            bullet->update(deltaTime);
-            
-            //draw bullet
-            window.draw(bullet->getSprite());
-            
-            //check for enemy hits
-            for (int i = 0; i < game1.getNumOfEnemies() && bulletActive; i++) 
-            {
-                Enemy* enemy = game1.getEnemies()[i];
-                if(enemy && bullet->hasHitTarget(enemy))
-                {
-                    //hit an enemy
-                    enemy->setHealth(enemy->getHealth() - 1);
-                    
-                    //enemy died
-                    if(enemy->getHealth() <= 0)
-                    {
-                        //spawn coin
-                        coinPos = enemy->getSprite().getPosition();
-                        coinPos.y += 10; // Slight offset for visual effect
-                        coinForKill.setPosition(coinPos);
-                        enemyKill = true;
-                        
-                        //add currency
-                        currency += 5;
-                        
-                        //remove enemy
-                        delete enemy;
-                        game1.getEnemies()[i] = nullptr;
-                    }
-                    
-                    //remove bullet
-                    delete bullet;
-                    bulletActive = false;
-                }
-            }
-
-            //check if bullet is out of range
-            if(bulletActive && bullet->outOfRange(playArea))
-            {
-                delete bullet;
-                bulletActive = false;
-            }
-            
-            //track active bullets
-            if(bulletActive)
-            {
-                activeBullets.push_back(bullet);
-            }
-        }
-
-        //update active bullets
-        game1.updateBullets(activeBullets);
-
-        //Display Title Screen
+        // Update and process based on current state
         if (state == TITLE_SCREEN)
         {
             window.clear();
-
             window.draw(rulesButton);
             window.draw(playButton);
-
             window.draw(header);
-
             window.display();
         }
-        //Display Rules Screen
         else if (state == RULES_SCREEN)
         {
             window.clear();
-
             window.draw(rulesTitle);
             window.draw(rulesText);
-
             window.draw(backButton);
-
             window.display();
         }
-        //Display Game Screen
         else if (state == GAME_SCREEN)
         {
-            sf::Vector2f coin1; // this is the coin for up in the left to show a coin for how many pinecoins we have -Thad
-            coin1.x=60;coin1.y=12;
-            Coin currencyIndicatorCoin(coin1);
-
             window.clear();
-
             mapSprite.setScale(700.f / 2564.f, 400.f / 2152.f);
             window.draw(mapSprite);
 
-            currencyText.setString("Coins:   " + std::to_string(currency));
-            roundText.setString("Round: " + std::to_string(round));
-            window.draw(currencyText);
-            window.draw(roundText);
+            //moved up here cause i think it fits better here -Cameron
+            sf::Vector2f coin1; // this is the coin for up in the left to show a coin for how many pinecoins we have -Thad
+            coin1.x = 60; 
+            coin1.y = 12;
+            Coin currencyIndicatorCoin(coin1);
 
-            window.draw(sidebar);
-            window.draw(towerBtn1);
-            window.draw(towerBtn2);
-            window.draw(towerBtn3);
-            window.draw(roundStartButton);
-            currencyIndicatorCoin.drawSprite(window);
+            // moved the tower drawing up here so its one of the first things to be drawn -Cameron
+            for (int i = 0; i < game1.getNumOfTowers(); i++)
+            {
+                (game1.getTowers())[i]->draw(window);
+            }
 
             // Enemy spawning logic
             if (roundInProgress && spawnCount < maxEnemiesThisRound)
             {
                 //If the time between spawns is up, then spawn an enemy
+                // had to change so much here :(
                 if (enemySpawnTimer.getElapsedTime().asSeconds() >= spawnInterval)
                 {
-                    Enemy *e = new Enemy(peasant);
-                    if(round <= 7)
+                    // changed so it doesnt spawn a peasant as the first enemy each time
+                    Enemy *e = nullptr;
+                    
+                    //chaged to up the difficulty earlier
+                    if(round <= 3)
                     { 
-                    e = new Enemy(peasant);
-                    e->getSprite().setPosition(waypoints[0]); //places enemy on first waypoint
-                    e->setCurrentWaypoint(1); // routes to next waypoint
-                    game1.addEnemy(e); //sends the Enemy to Game class
-                    
-                    spawnCount++; //Enemy Has Spawned
-                    enemySpawnTimer.restart(); //Restarts timer for next Enemy
-                    
-                    //sends amount of enemies spawned to console for debugging purposes
-                    std::cout << "Spawned enemy " << spawnCount << " of " << maxEnemiesThisRound << std::endl;
+                        e = new Enemy(peasant);
                     }
-                    //if round is above 7 start spawning tougher enemies
-                    else if(round > 7)
+                    //chaged to up the difficulty earlier
+                    else if(round > 3 && round < 10)
                     {
                         if(spawnCount % 4 == 1)
                         {
@@ -502,19 +404,9 @@
                         {
                             e = new Enemy(peasant);
                         }
-                        
-                        e->getSprite().setPosition(waypoints[0]); //places enemy on first waypoint
-                        e->setCurrentWaypoint(1); // routes to next waypoint
-                        game1.addEnemy(e); // sends the Enemy to Game class
-                        
-                        spawnCount++; //tracking for Enemy spawn amount
-                        enemySpawnTimer.restart(); //Restarts timer for next Enemy
-                        
-                        //sends amount of enemies spawned to console for debugging purposes
-                        std::cout << "Spawned enemy " << spawnCount << " of " << maxEnemiesThisRound << std::endl;
                     }
                     //final difficulty that goes on forever
-                    else if (round >= 20)
+                    else
                     {
                         if(spawnCount % 4 == 1)
                         {
@@ -524,109 +416,146 @@
                         {
                             e = new Enemy(knight);
                         }
-                        
+                    }
+
+                    // sets waypoints as long as there are enemies
+                    if (e != nullptr)
+                    {
                         e->getSprite().setPosition(waypoints[0]); //places enemy on first waypoint
                         e->setCurrentWaypoint(1); // routes to next waypoint
                         game1.addEnemy(e); // sends the Enemy to Game class
                         
-                        spawnCount++; //tracking for Enemy spawn amount
-                        enemySpawnTimer.restart(); //Restarts timer for next Enemy
-                        
-                        //sends amount of enemies spawned to console for debugging purposes
+                        spawnCount++;
+                        enemySpawnTimer.restart();
                         std::cout << "Spawned enemy " << spawnCount << " of " << maxEnemiesThisRound << std::endl;
                     }
                 }
             }
 
-            //Assumes all enemies are dead unless the check below states otherwise
+            // moved out of polling so that it proc during events
+            game1.checkTowerRanges();
+            std::vector<PineCone*> currentBullets = game1.getBullets();
+            std::vector<PineCone*> activeBullets;
+            std::vector<Enemy*> currentEnemies = game1.getEnemies();
+
+            // this didnt belong in polling
+            for(size_t i = 0; i < currentBullets.size(); ++i) 
+            {
+                PineCone* bullet = currentBullets[i];
+                if (bullet == nullptr)
+                {
+                    continue;
+                }
+
+                bool bulletActive = true;
+                
+                //update bullet position
+                bullet->update(deltaTime, currentEnemies);
+
+                //draw bullet
+                window.draw(bullet->getSprite());
+                
+                // checking if the bullet has gone out of the map
+                if(bulletActive && bullet->outOfRange(playArea))
+                {
+                    delete bullet;
+                    bulletActive = false;
+                }
+                
+                // Keep track of active bullets
+                if(bulletActive && !bullet->isMarked())
+                {
+                    activeBullets.push_back(bullet);
+                }
+            }
+            
+            //update active bullets
+            //moved down here so it updates after it processes the bullets
+            game1.updateBullets(activeBullets);
+
+            // Process enemies and check for game end conditions
             bool allDead = true;
             bool enemyReachedEnd = false;
             
-            //Iterates through every enemy spawned
+            // Create a temporary vector to track enemies that need to be removed
+            std::vector<Enemy*> remainingEnemies;
             
-            // for (size_t i = 0; i < currentEnemies.size(); ++i)
-
-            std::vector<Enemy*> currentEnemies = game1.getEnemies();
-            for (int i = 0; i < game1.getNumOfEnemies(); ++i)
-
+            //updating enemy movement
+            for (size_t i = 0; i < currentEnemies.size(); ++i)
             {
-                // coinPosition = currentEnemies[i]->getSprite().getPosition(); // this will allow me to keep track of the enemies and where a coin should be if they die -Thad
-                //if enemy dies, pineCoins.drawSprite(window);
-                
-                //if there is still an enemy in the vector
-                if (currentEnemies[i])
+                Enemy* enemy = currentEnemies[i];
+                if (enemy != nullptr)
                 {
-                    //Draw and move the enemy
-                    currentEnemies[i]->updateMovement(waypoints, deltaTime);
-                    currentEnemies[i]->drawSprite(window);
+                    // Update enemy position along waypoints
+                    enemy->updateMovement(waypoints, deltaTime);
+                    enemy->drawSprite(window);
                     
-                    //Checks if the enemy is alive
-                    if (currentEnemies[i]->getHealth() > 0)
+                    // Check enemy state
+                    if (enemy->getHealth() > 0)
                     {
                         allDead = false;
                         
-                        // Check if enemy has reached the end waypoint
-                        if (currentEnemies[i]->getCurrentWaypoint() >= waypoints.size())
+                        // Check if enemy has reached end of path
+                        if (enemy->getCurrentWaypoint() >= waypoints.size())
                         {
-                            //Debugging to let me know they have reached the end
                             std::cout << "Enemy reached end of path!" << std::endl;
                             enemyReachedEnd = true;
                             
-                            // Remove this enemy from the game
-                            delete currentEnemies[i];
+                            // Cleanup this enemy
+                            delete enemy;
                             currentEnemies[i] = nullptr;
                             
-                            // Since an enemy reached the end, transition to game over screen
+                            // Game over condition
                             state = GAME_OVER_SCREEN;
                             break;
                         }
+                        
+                        // Keep this enemy in our tracking
+                        remainingEnemies.push_back(enemy);
                     }
-                    else{
-                        currency+=2;
-                        coinPos=(currentEnemies[i]->getSprite()).getPosition();
-                        coinPos.y+=50;
+                    else
+                    {
+                        // Enemy died - spawn coin and award currency
+                        currency += 5;
+                        coinPos = enemy->getSprite().getPosition();
+                        coinPos.y += 10; // Offset for visual effect
                         coinForKill.setPosition(coinPos);
-                        enemyKill=true;
-                        delete currentEnemies[i];
+                        enemyKill = true;
+                        
+                        // Clean up dead enemy
+                        delete enemy;
                         currentEnemies[i] = nullptr;
                     }
                 }
-                if (frameCount>10&&frameCount<15){ //just to test killing them to spawn my coins in -Thad
-                    currentEnemies[i]->setHealth(0);
-                    frameCount=16;
-                }////////////////////////////////////////////////////////
+            }
+            
+            // updates enemies in the temp vector as long as the enemies have not reached the end
+            if (!enemyReachedEnd) 
+            {
+                game1.updateEnemies(remainingEnemies);
             }
             
             static int coinflip=0; //need to make this transition slower, probably with a count so that it isnt too fast
-            if (enemyKill&&coinflip%10==0){
+            if (enemyKill&&coinflip%10==0)
+            {
                 coinForKill.setRotation(0);
-            }else if(enemyKill&&coinflip%5==0){
+            }
+            else if(enemyKill&&coinflip%5==0)
+            {
                 coinForKill.setRotation(180);
             }
             if (enemyKill)
+            {
                 coinForKill.drawSprite(window);
+            }
+
             coinflip++;
+
             if(coinflip>20)
+            {
                 enemyKill=false;
+            }
             //coinForKill.drawSprite(window); // should be printing above not here -Thad
-
-
-            // Update the game's enemies vector with any changes
-            game1.updateEnemies(currentEnemies);
-
-            //draw any placed towers
-            for (int i = 0; i < game1.getNumOfTowers(); i++)
-
-            {
-                (game1.getTowers())[i]->draw(window);
-            }
-
-            //draw projectiles
-            for(auto* p : game1.getBullets())
-            {
-                p->update(deltaTime);
-                window.draw(p->getSprite());
-            }
 
             //Ends the round and moves it forward after all enemies are defeated
             if (roundInProgress && allDead && spawnCount >= maxEnemiesThisRound && !enemyReachedEnd)
@@ -635,31 +564,44 @@
                 round++;
                 
                 // Add currency for completing the round
-                //Place holder value
+                // might remove this for balance changes
                 currency += 50 + (round * 3);
-
+                
                 // Clear enemies for the next round
                 game1.clearEnemies();
 
                 //remove any active bullets
                 game1.clearBullets();
+                
+                // debugging thingy
+                std::cout << "Round " << round-1 << " completed! Starting round: " << round << std::endl;
             }
+
+            // brought this down here so that it can be the very last thing we render on the screen
+            currencyText.setString("Coins:   " + std::to_string(currency));
+            roundText.setString("Round: " + std::to_string(round));
+            window.draw(currencyText);
+            window.draw(roundText);
+            window.draw(sidebar);
+            window.draw(towerBtn1);
+            window.draw(towerBtn2);
+            window.draw(towerBtn3);
+            window.draw(roundStartButton);
+            currencyIndicatorCoin.drawSprite(window);
+            
             window.display();
         }
         //Draws the Game over SCreen
-        else if(state == GAME_OVER_SCREEN)
+        else if (state == GAME_OVER_SCREEN)
         {
             window.clear();
-
             window.draw(gameOverHeader);
             window.draw(gameOverText);
-
             window.draw(retryButton);
             window.draw(menuButton);
-
             window.display();
         }
-        
+
     }
 
     return 0;
