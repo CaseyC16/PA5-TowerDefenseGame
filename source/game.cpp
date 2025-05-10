@@ -11,7 +11,7 @@
  * @brief checks tower range
  * 
  */
-void Game::checkTowerRanges()
+void Game::checkTowerRanges(float &deltaTime)
 {
     //tower cooldown (avoid rapid fire)
     static std::vector<float> towerCooldowns(placedTowers.size(), 0.0f);
@@ -28,12 +28,14 @@ void Game::checkTowerRanges()
             towerCooldowns[i] -= 0.1f;
         }
     }
+
+    //mTimeSinceLastShot += deltaTime;
     
     //iterate through towers
     for(size_t i = 0; i < placedTowers.size(); i++)
     {
         //make sure tower exists and skip tower if on cooldown
-        if (!placedTowers[i] || (i < towerCooldowns.size() && towerCooldowns[i] > 0))
+        if (!placedTowers[i] || (towerCooldowns[i] > 0 && i < towerCooldowns.size()))
         {
             continue;
         }
@@ -69,11 +71,12 @@ void Game::checkTowerRanges()
         {
             std::cout << "Enemy in Range!! Shooting enemy!!\n";
             placedTowers[i]->shoot(closestEnemy, currentBullets);
+            deltaTime = 0.f; //reset deltaTime
             
             //set cooldown for tower
             if (i < towerCooldowns.size()) 
             {
-                towerCooldowns[i] = 1.0f; //1-second cooldown
+                towerCooldowns[i] = placedTowers[i]->getFireRate(); //set cooldown based on tower type
             }
         }
 

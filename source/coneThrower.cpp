@@ -33,10 +33,10 @@ ConeThrower::ConeThrower(sf::Vector2f position)
     mSprite.setOrigin(sf::Vector2f(bounds.width / 2.f, bounds.height / 2.f));
     mRadius = 100;
     mPos = position;
-    mFireRate = 1; //sleep one second between attacks
+    mFireRate = 20.f; //cooldown between attacks
     //mDamage = 1; //take one hp from enemy
     mSprite.setPosition(mPos);
-    mCost = 50;
+    mCost = 100;
 }
 
 /**
@@ -75,7 +75,7 @@ bool ConeThrower::placeTower(Tower *tower, sf::Vector2f position, Game &currentG
     }
 
     //Check if player has enough currency
-    if(currency < 50)
+    if(currency < mCost)
     {
         std::cout << "Not enough currency to place tower." << std::endl;
         return false;
@@ -84,6 +84,6 @@ bool ConeThrower::placeTower(Tower *tower, sf::Vector2f position, Game &currentG
     Tower *newTower = new ConeThrower(sf::Vector2f(position));
     std::cout << "Placed ConeThrower at x = " << position.x << ", y = " << position.y << std::endl;
     currentGame.addTower(newTower);
-    currency -= 50;
+    currency -= mCost;
     return true;
 }

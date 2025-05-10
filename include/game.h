@@ -20,7 +20,7 @@ class Tower; //forward declaration for Tower class
 class Game
 {
 public:
-    void checkTowerRanges();
+    void checkTowerRanges(float &deltaTime);
     std::vector<Enemy*> getEnemies() const {return currentEnemies;};
     std::vector<Tower*> getTowers() const {return placedTowers;}
     std::vector<PineCone*> getBullets() const {return currentBullets;}
@@ -38,6 +38,7 @@ private:
     std::vector<Enemy*> currentEnemies;
     std::vector<Tower*> placedTowers;
     std::vector<PineCone*> currentBullets;
+    //float mTimeSinceLastShot; //track time between shots
 };
 
 #endif

@@ -144,9 +144,9 @@ int main()
     mapSprite.setScale(700.f / 2564.f, 400.f / 2152.f);
 
     //Buttons for the Towers & Round Start Button
-    Button towerBtn1("Cone\n  50", {750.f, 100.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
-    Button towerBtn2("Archer\n   80", {750.f, 160.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
-    Button towerBtn3("Assault\n   200", {750.f, 220.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn1("Cone\n 100", {750.f, 100.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn2("Archer\n  160", {750.f, 160.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
+    Button towerBtn3("Assault\n   400", {750.f, 220.f}, {100.f, 40.f}, sf::Color(54, 50, 168));
     Button roundStartButton("START", {750.f, 350.f}, {90.f, 60.f}, sf::Color::Green);
     roundStartButton.setColorTextNormal(sf::Color(95, 25, 10));
 
@@ -273,7 +273,7 @@ int main()
                 if (state == GAME_SCREEN) 
                 {
                     // checks if the tower button is pressed and if you have enough currency
-                    if(towerBtn1.getBounds().contains(mousePos) && currency >= 50)
+                    if(towerBtn1.getBounds().contains(mousePos) && currency >= 100)
                     {
                         // locks player in so that they can spawn a tower
                         isPlacingTower1 = true;
@@ -282,7 +282,7 @@ int main()
                         std::cout << "Selected Cone Tower for placement" << std::endl;
                     }
                     // checks if the tower button is pressed and if you have enough currency
-                    else if (towerBtn2.getBounds().contains(mousePos) && currency >= 80)
+                    else if (towerBtn2.getBounds().contains(mousePos) && currency >= 160)
                     {
                         // locks player in so that they can spawn a tower
                         isPlacingTower1 = false;
@@ -291,7 +291,7 @@ int main()
                         std::cout << "Selected Archer Tower for placement" << std::endl;
                     }
                     // checks if the tower button is pressed and if you have enough currency
-                    else if (towerBtn3.getBounds().contains(mousePos) && currency >= 200)
+                    else if (towerBtn3.getBounds().contains(mousePos) && currency >= 400)
                     {
                         // locks player in so that they can spawn a tower
                         isPlacingTower1 = false;
@@ -433,7 +433,7 @@ int main()
             }
 
             // moved out of polling so that it proc during events
-            game1.checkTowerRanges();
+            game1.checkTowerRanges(deltaTime);
             std::vector<PineCone*> currentBullets = game1.getBullets();
             std::vector<PineCone*> activeBullets;
             std::vector<Enemy*> currentEnemies = game1.getEnemies();

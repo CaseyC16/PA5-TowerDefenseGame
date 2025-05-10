@@ -25,6 +25,7 @@ public:
     sf::Vector2f getPosition() const {return mPos;}
     sf::Sprite getSprite() const {return mSprite;}
     float getRadius() const {return mRadius;}
+    float getFireRate() const {return mFireRate;}
     virtual bool placeTower(Tower *tower, sf::Vector2f position, Game &currentGame, int &currency, sf::FloatRect mapBounds) = 0;
     void shoot(Enemy *target, std::vector<PineCone*> &gameBullets);
     bool checkBounds(sf::Vector2f position, sf::FloatRect mapBounds, std::vector<Tower*> placedTowers);
@@ -43,7 +44,7 @@ protected:
     //TestSprite mSprite; //tower sprite
     sf::Sprite mSprite {};
     sf::Vector2f mPos {0.f,0.f};
-    int mFireRate {0}; //sleep time between attacks
+    float mFireRate {0.f}; //sleep time between attacks
     int mCost {0};  
     //int mDamage {0}; 
     std::vector<Enemy*> mTargets;
