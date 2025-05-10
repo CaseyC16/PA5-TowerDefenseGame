@@ -30,12 +30,12 @@ AssaultSquirrel::AssaultSquirrel(sf::Vector2f position)
     //set origin to center
     sf::FloatRect bounds = mSprite.getLocalBounds();
     mSprite.setOrigin(sf::Vector2f(bounds.width / 2.f, bounds.height / 2.f));
-    mRadius = 25;
+    mRadius = 65;
     mPos = position;
     mFireRate = 15; //sleep 15 seconds between attacks
     //mDamage = 10; //destroy all enemies in range
     mSprite.setPosition(mPos);
-    mCost = 200;
+    mCost = 400;
 }
 
 /**
@@ -80,7 +80,7 @@ bool AssaultSquirrel::placeTower(Tower *tower, sf::Vector2f position, Game &curr
     }
 
     //Check if player has enough currency
-    if(currency < 200)
+    if(currency < mCost)
     {
         std::cout << "Not enough currency to place tower." << std::endl;
         return false;
@@ -89,6 +89,6 @@ bool AssaultSquirrel::placeTower(Tower *tower, sf::Vector2f position, Game &curr
     Tower *newTower = new AssaultSquirrel(sf::Vector2f(position));
     std::cout << "Placed Assault Squirrel at x = " << position.x << ", y = " << position.y << std::endl;
     currentGame.addTower(newTower);
-    currency -= 200;
+    currency -= mCost;
     return true;
 }

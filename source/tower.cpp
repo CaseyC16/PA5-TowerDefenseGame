@@ -128,7 +128,4 @@ void Tower::shoot(Enemy *target, std::vector<PineCone*> &gameBullets)
     sf::Vector2f startPos = this->getPosition();
     PineCone *newBullet = new PineCone(startPos, target);
     gameBullets.push_back(newBullet);
-
-    //point bullet at enemy
-
 }

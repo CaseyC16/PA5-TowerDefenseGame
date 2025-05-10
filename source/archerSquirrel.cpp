@@ -30,12 +30,12 @@ ArcherSquirrel::ArcherSquirrel(sf::Vector2f position)
     //set origin to center
     sf::FloatRect bounds = mSprite.getLocalBounds();
     mSprite.setOrigin(sf::Vector2f(bounds.width / 2.f, bounds.height / 2.f));
-    mRadius = 30;
+    mRadius = 80;
     mPos = position;
     mFireRate = 10; //sleep 10 seconds between attacks
     //mDamage = 10; //take 1 hp from first 10 enemies
     mSprite.setPosition(mPos);
-    mCost = 80;
+    mCost = 160;
 }
 
 /**
@@ -76,7 +76,7 @@ bool ArcherSquirrel::placeTower(Tower *tower, sf::Vector2f position, Game &curre
     }
 
     //Check if player has enough currency
-    if(currency < 80)
+    if(currency < mCost)
     {
         std::cout << "Not enough currency to place tower." << std::endl;
         return false;
@@ -85,6 +85,6 @@ bool ArcherSquirrel::placeTower(Tower *tower, sf::Vector2f position, Game &curre
     Tower *newTower = new ArcherSquirrel(sf::Vector2f(position));
     std::cout << "Placed Archer Squirrel at x = " << position.x << ", y = " << position.y << std::endl;
     currentGame.addTower(newTower);
-    currency -= 80;
+    currency -= mCost;
     return true;
 }
