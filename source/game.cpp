@@ -32,14 +32,8 @@ void Game::checkTowerRanges()
     //iterate through towers
     for(size_t i = 0; i < placedTowers.size(); i++)
     {
-        //make sure tower exists
-        if (!placedTowers[i])
-        {
-            continue;
-        }
-
-        //skip tower if on cooldown
-        if(i < towerCooldowns.size() && towerCooldowns[i] > 0)
+        //make sure tower exists and skip tower if on cooldown
+        if (!placedTowers[i] || (i < towerCooldowns.size() && towerCooldowns[i] > 0))
         {
             continue;
         }
@@ -77,7 +71,8 @@ void Game::checkTowerRanges()
             placedTowers[i]->shoot(closestEnemy, currentBullets);
             
             //set cooldown for tower
-            if (i < towerCooldowns.size()) {
+            if (i < towerCooldowns.size()) 
+            {
                 towerCooldowns[i] = 1.0f; //1-second cooldown
             }
         }
@@ -100,24 +95,6 @@ void Game::checkTowerRanges()
     //         }
     //     }
     }
-}
-
-/**
- * @brief clear enemies
- * 
- */
-void Game::clearEnemies()
-{
-    //delete ptrs
-    for (size_t i = 0; i < currentEnemies.size(); ++i) {
-        if (currentEnemies[i] != nullptr) {
-            delete currentEnemies[i];
-            currentEnemies[i] = nullptr;
-        }
-    }
-    
-    //clear vector
-    currentEnemies.clear();
 }
 
 /**
@@ -144,33 +121,26 @@ void Game::clearTowers()
  */
 void Game::clearBullets()
 {
-    //delete ptrs
-    for (size_t i = 0; i < currentBullets.size(); ++i) {
-        if (currentBullets[i] != nullptr) {
-            delete currentBullets[i];
-            currentBullets[i] = nullptr;
+    // make a temp vector to help read just the bullet vector
+    std::vector<PineCone*> tempBullets;
+    for (size_t i = 0; i < currentBullets.size(); ++i) 
+    {
+        if (currentBullets[i] != nullptr) 
+        {
+            // if the bullets are going to hit an enemy delete the bullets because they have been used
+            if (currentBullets[i]->isMarked()) 
+            {
+                delete currentBullets[i];
+            }
+            // keep the bullets that have not targeted an enemy yet
+            else 
+            {
+                tempBullets.push_back(currentBullets[i]);
+            }
         }
-    }
-    
-    //clear vector
-    currentBullets.clear();
-}
+    } 
 
-/**
- * @brief update enemy vector
- * 
- * @param updatedEnemies 
- */
-void Game::updateEnemies(const std::vector<Enemy*>& updatedEnemies)
-{
-    //clean vector
-    currentEnemies.clear();
-    
-    for (auto* enemy : updatedEnemies) {
-        if (enemy != nullptr) {
-            currentEnemies.push_back(enemy);
-        }
-    }
+    currentBullets = tempBullets;
 }
 
 /**
@@ -183,9 +153,63 @@ void Game::updateBullets(const std::vector<PineCone*>& updatedBullets)
     //clean vector
     currentBullets.clear();
     
-    for (auto* bullet : updatedBullets) {
-        if (bullet != nullptr) {
-            currentBullets.push_back(bullet);
+    for (size_t i = 0; i < updatedBullets.size(); ++i) 
+    {
+        if (updatedBullets[i] != nullptr && !updatedBullets[i]->isMarked()) 
+        {
+            currentBullets.push_back(updatedBullets[i]);
         }
+        else 
+        {
+            delete updatedBullets[i];  // Ensure proper memory cleanup
+        }
+    }
+}
+
+/**
+ * @brief this function clears enemies that have been marked for deletion
+ * 
+ */
+void Game::clearEnemies() 
+{
+    std::vector<Enemy*> tempEnemies;
+
+    for (size_t i = 0; i < currentEnemies.size(); ++i) 
+    {
+        if (currentEnemies[i] != nullptr) 
+        {
+            // delete enemies that have been marked
+            if (currentEnemies[i]->isMarked()) 
+            {
+                delete currentEnemies[i];
+            } 
+            // keep enemies that have not been marked
+            else 
+            {
+                tempEnemies.push_back(currentEnemies[i]);
+            }
+        }
+    }
+
+    currentEnemies = tempEnemies;
+}
+
+/**
+ * @brief update enemy vector
+ * 
+ * @param updatedEnemies 
+ */
+void Game::updateEnemies(const std::vector<Enemy*>& updatedEnemies)
+{
+    //clean vector
+    currentEnemies.clear();
+    
+    for (size_t i = 0; i < updatedEnemies.size(); ++i) 
+    {
+        if (updatedEnemies[i] != nullptr) 
+        {
+            currentEnemies.push_back(updatedEnemies[i]);
+        }
+
     }
 }
